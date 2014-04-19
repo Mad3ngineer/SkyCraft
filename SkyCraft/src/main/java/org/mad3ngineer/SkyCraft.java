@@ -1,6 +1,7 @@
 package org.mad3ngineer;
 
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +15,9 @@ public final class SkyCraft extends JavaPlugin {
 	public void onEnable() {
 	    
 		instance = this;
+		
+		checkConfig();
+		
 		db = new DBInterface();
 		db.init(this);
         getCommand("island").setExecutor(new IslandCommand());
@@ -30,6 +34,13 @@ public final class SkyCraft extends JavaPlugin {
 	public void onDisable() {
 		
 	    getLogger().info("SkyCraft has been disabled!");
+		
+	}
+	
+	public void checkConfig(){
+	    
+		if(getConfig().getString("db_host")==null)
+			this.saveDefaultConfig();
 		
 	}
 	
