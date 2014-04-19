@@ -1,17 +1,17 @@
 name: SkyCraft
 main: org.mad3ngineer.SkyCraft
-depend: [WorldEdit]
+depend: [WorldEdit,CleanroomGenerator,WorldGuard,SQLibrary]
 version: ${project.version}
 
 commands:
    island:
       description: Island Operations.
-      usage: /island [home|sethome|visit]
+      usage: /island [home|sethome|accept|decline] {[invite|kick|visit|] <player>}
       permission: skycraft.island
       permission-message: You don't have <permission>
    islandev:
       description: Admin Island Operations.
-      usage: /
+      usage: /islandev [tp|delete] <player> {transfer <owner> <newowner>}
       
 permissions:
     skycraft.*:
@@ -28,6 +28,12 @@ permissions:
             skycraft.island.visit: true
             skycraft.island.visitable: true
             skycraft.island.create: true
+            skycraft.island.accept: true
+            skycraft.island.decline: true
+            skycraft.island.kick: true
+            skycraft.island.delete: true
+            skycraft.island.create: true
+            
     skycraft.island.home:
         description: Go to island
         default: false
@@ -40,10 +46,30 @@ permissions:
     skycraft.island.visitable:
         description: Toggle your islands visitability
         default: false
+    skycraft.island.accept:
+        description: Accept invite to island
+        default: false
+    skycraft.island.decline:
+        description: Decline island invite
+        default: false
+    skycraft.island.kick:
+        description: Kick a player from your island
+        default: false
+    skycraft.island.delete:
+        description: Delete your island
+        default: false
+    skycraft.island.create:
+        description: Create a new island
+        default: false
 
     skycraft.islandev.*:
         description: Gives access to all admin commands
         default: op
+        children:
+            skycraft.islandev.tp: true
+            skycraft.islandev.transfer: true
+            skycraft.islandev.delete: true
+
     skycraft.islandev.tp:
         description: Teleport to players islands
         default: op
