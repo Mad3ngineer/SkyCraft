@@ -1,0 +1,55 @@
+name: SkyCraft
+main: org.mad3ngineer.SkyCraft
+depend: [WorldEdit]
+version: ${project.version}
+
+commands:
+   island:
+      description: Island Operations.
+      usage: /island [home|sethome|visit]
+      permission: skycraft.island
+      permission-message: You don't have <permission>
+   islandev:
+      description: Admin Island Operations.
+      usage: /
+      
+permissions:
+    skycraft.*:
+        description: Gives access to all skycraft commands
+        children:
+            skycraft.island.*: true
+            skycraft.islandev.*: true
+
+    skycraft.island.*:
+        description: Gives access to all user commands	
+        children:
+            skycraft.island.home: true
+            skycraft.island.sethome: true
+            skycraft.island.visit: true
+            skycraft.island.visitable: true
+            skycraft.island.create: true
+    skycraft.island.home:
+        description: Go to island
+        default: false
+    skycraft.island.sethome:
+        description: Set island home
+        default: false
+    skycraft.island.visit:
+        description: Visit someone's island
+        default: false
+    skycraft.island.visitable:
+        description: Toggle your islands visitability
+        default: false
+
+    skycraft.islandev.*:
+        description: Gives access to all admin commands
+        default: op
+    skycraft.islandev.tp:
+        description: Teleport to players islands
+        default: op
+    skycraft.islandev.transfer:
+        description: Transfer island ownership
+        default: op
+    skycraft.islandev.delete:
+        description: Force island deletion
+        default: op
