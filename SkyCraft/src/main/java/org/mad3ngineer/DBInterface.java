@@ -24,6 +24,10 @@ public class DBInterface {
 	            SkyCraft.getInstance().getConfig().getString("db_username"), 
 	            SkyCraft.getInstance().getConfig().getString("db_password"));
 		
+		if(!sql.isOpen()){
+			sql.open();
+		}
+		
 		if(!sql.checkTable("sc_islands")){
 			dbQuery("CREATE TABLE IF NOT EXISTS sc_islands (id INTEGER PRIMARY KEY AUTOINCREMENT, visitable BOOLEAN, home CHAR[150], location CHAR[50], owner CHAR[50], members CHAR[300])");
 		}
