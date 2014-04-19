@@ -189,6 +189,18 @@ public class SCOperations {
 		
 	}
 	
+	public static void deleteIsland(Player player){
+		
+		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
+		
+		if(scp.hasIsland()){
+			if(scp.IslandRank == SCPlayer.RANK_OWNER){
+				IslandFactory.deleteIsland(scp.getIsland());
+			}
+		}
+		
+	}
+	
 	//Dev Operations
 	
 	public static void tp(Player player, String target){
@@ -220,7 +232,7 @@ public class SCOperations {
 	
 	public static void deleteIsland(Player player, String target){
 		
-		SkyCraft.db().deleteIsland(SkyCraft.db().getPlayer(target).getIsland());
+		IslandFactory.deleteIsland(SkyCraft.db().getIsland(SkyCraft.db().getPlayer(target).IslandID));
 		player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
 		
 	}
