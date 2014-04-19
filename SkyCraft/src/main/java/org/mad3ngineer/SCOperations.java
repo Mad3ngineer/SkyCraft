@@ -231,7 +231,7 @@ public class SCOperations {
 	}
 	
 	public static void deleteIsland(Player player, String target){
-		
+		//Admin command to delete island
 		IslandFactory.deleteIsland(SkyCraft.db().getIsland(SkyCraft.db().getPlayer(target).IslandID));
 		player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
 		
