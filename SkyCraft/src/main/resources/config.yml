@@ -1,0 +1,12 @@
+#Database connection info. Needed to use this plugin!
+db_host: localhost
+db_port: 3306
+db_database: database_name
+db_username: username
+db_password: password
+
+#The worldname that will be used for islands. 
+worldname: skycraft
+
+#The size of islands in the world
+islandsize: 150
