@@ -11,6 +11,7 @@ public class SCOperations {
 	public static void home(Player player){
 		
 		SCPlayer scplayer = SkyCraft.db().getPlayer(player.getName());
+		
 		if(scplayer.hasIsland()){
 			Island island = scplayer.getIsland();
 			Location home = island.getHome();
@@ -73,6 +74,8 @@ public class SCOperations {
 			}else{
 				player.sendMessage(ChatColor.BLUE+target+"'s island is closed to visitors");
 			}
+		}else{
+			player.sendMessage(ChatColor.RED+"That player doesn't have an island");
 		}
 		
 	}
@@ -114,9 +117,9 @@ public class SCOperations {
 		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
 		SCPlayer sct = SkyCraft.db().getPlayer(scp.invited);
 		
-		if(sct==null){
-			player.sendMessage(ChatColor.RED+"There is no player by the name of "+sct.name);
-			scp.invited = null;
+		if(sct.name.equals("")){
+			player.sendMessage(ChatColor.RED+"You have no invites!");
+			return;
 		}else{
 			if(scp.hasIsland()){
 				player.sendMessage(ChatColor.RED+"You already have an island! Delete it before you accept invites!");
@@ -143,9 +146,13 @@ public class SCOperations {
 	public static void declineInvite(Player player){
 		
 		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
+		if(SkyCraft.db().getPlayer(scp.invited).name==""){
+			return;
+		}
+		
 		player.sendMessage(ChatColor.GREEN+"You declined the invite from "+scp.invited);
 		try{
-			SkyCraft.getInstance().getServer().getPlayer(scp.invited).sendMessage(ChatColor.RED+scp.name+" declined your invite");
+			SkyCraft.getInstance().getServer().getPlayerExact(scp.invited).sendMessage(ChatColor.RED+scp.name+" declined your invite");
 		}catch(Exception e){
 			SkyCraft.getInstance().getLogger().info(ChatColor.RED+scp.name+" declined an offline player's invite");
 		}

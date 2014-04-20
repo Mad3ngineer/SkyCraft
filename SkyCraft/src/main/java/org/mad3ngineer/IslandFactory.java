@@ -47,7 +47,7 @@ public class IslandFactory {
 			}
 			pos = open.get(dv);
 			
-			if(SkyCraft.db().getIslandID(""+pos.x+";"+pos.y) == -1){
+			if(SkyCraft.db().getIslandID(pos.x+";"+pos.y) == -1){
 				//Island id returned is -1, meaning that there is no island at that location. This is a good spot.
 				return pos;
 				

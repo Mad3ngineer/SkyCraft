@@ -40,10 +40,11 @@ public class IslandCommand implements CommandExecutor{
 	        	else if(args[0].equalsIgnoreCase("visit")){
 	        		if(player.hasPermission(userperm+"visit")){
 	        			if(args.length>=2){
-	        				SCOperations.visit(player, args[0]);
+	        				SCOperations.visit(player, args[1]);
 	        				return true;
 	        			}else{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island visit <player>");
+	        				return true;
         				}
 	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have permission!");
@@ -85,8 +86,10 @@ public class IslandCommand implements CommandExecutor{
 	        		if(player.hasPermission(userperm+"kick")){
 	        			if(args.length>=2){
 	        				SCOperations.kickPlayer(player, args[1]);
+	        				return true;
 	        			}else{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island kick <player>");
+	        				return true;
         				}
 	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");

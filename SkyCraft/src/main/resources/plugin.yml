@@ -21,7 +21,7 @@ permissions:
             skycraft.islandev.*: true
 
     skycraft.island.*:
-        description: Gives access to all user commands	
+        description: Gives access to all user commands
         children:
             skycraft.island.home: true
             skycraft.island.sethome: true

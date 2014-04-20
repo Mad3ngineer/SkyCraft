@@ -16,7 +16,7 @@ public final class SkyCraft extends JavaPlugin {
 	    
 		instance = this;
 		
-		checkConfig();
+		this.saveDefaultConfig();
 		
 		db = new DBInterface();
 		db.init(this);
@@ -34,13 +34,6 @@ public final class SkyCraft extends JavaPlugin {
 	public void onDisable() {
 		
 	    getLogger().info("SkyCraft has been disabled!");
-		
-	}
-	
-	public void checkConfig(){
-	    
-		if(getConfig().getString("db_host")==null)
-			this.saveDefaultConfig();
 		
 	}
 	
