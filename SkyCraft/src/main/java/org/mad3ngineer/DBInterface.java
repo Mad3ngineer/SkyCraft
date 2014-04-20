@@ -34,6 +34,9 @@ public class DBInterface {
 			
 	}
 	
+	
+	//Old code
+	
 	public String checkNull(String def, String test){
 		
 		if(test==null){
