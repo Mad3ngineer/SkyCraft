@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class IslandFactory {
 	
-	public static int createNewIsland(String owner){
+	public static voxel createNewIsland(String owner){
 		
 		Island island = new Island();
 		
@@ -16,7 +16,9 @@ public class IslandFactory {
 		island.lx = pos.x;
 		island.ly = pos.y;
 		
-		return SkyCraft.db().addIsland(island);
+		SkyCraft.db().updateIsland(island);
+		
+		return new voxel(island.lx, island.ly);
 		
 		//TODO: Add worldedit island pasting
 		
@@ -47,7 +49,7 @@ public class IslandFactory {
 			}
 			pos = open.get(dv);
 			
-			if(SkyCraft.db().getIslandID(pos.x+";"+pos.y) == -1){
+			if(SkyCraft.db().getIsland(pos.x+";"+pos.y).owner.equals("")){
 				//Island id returned is -1, meaning that there is no island at that location. This is a good spot.
 				return pos;
 				

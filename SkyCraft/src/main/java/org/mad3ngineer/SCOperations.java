@@ -87,7 +87,10 @@ public class SCOperations {
 		if(scplayer.hasIsland()){
 			player.sendMessage(ChatColor.RED+"You already have an island! Delete it if you want to create a new one.");
 		}else{
-			scplayer.IslandID = IslandFactory.createNewIsland(player.getName());
+			voxel v = IslandFactory.createNewIsland(player.getName());
+			scplayer.IX = v.x;
+			scplayer.IY = v.y;
+			scplayer.hasIsland = SCPlayer.HAS_ISLAND;
 			scplayer.IslandRank = SCPlayer.RANK_OWNER;
 			SkyCraft.db().updatePlayer(scplayer);
 			player.sendMessage(ChatColor.GREEN+"Island Created!");
@@ -127,8 +130,11 @@ public class SCOperations {
 				if(sct.hasIsland()){
 					Island island = sct.getIsland();
 					island.addMember(scp.name);
+					scp.hasIsland = SCPlayer.HAS_ISLAND;
+					scp.IX = island.lx;
+					scp.IY = island.ly;
+					
 					scp.invited = null;
-					scp.IslandID = island.id;
 					scp.IslandRank = SCPlayer.RANK_MEMBER;
 			
 					player.sendMessage(ChatColor.GREEN+"You have been added to "+sct.name+"'s island!");
@@ -167,7 +173,7 @@ public class SCOperations {
 		
 		if(scp.hasIsland()){
 			if(sck.hasIsland()){
-				if(scp.IslandID==sck.IslandID){
+				if(scp.IX==sck.IX&&scp.IY==sck.IY){
 					if(scp.IslandRank>sck.IslandRank&&scp.IslandRank>=SCPlayer.RANK_OFFICER){
 						player.sendMessage(ChatColor.GREEN+sck.name+" has been kicked from your island.");
 						try{
@@ -177,7 +183,7 @@ public class SCOperations {
 						}
 						Island island = scp.getIsland();
 						island.removeMember(sck.name);
-						sck.IslandID = -1;
+						sck.hasIsland = SCPlayer.NO_ISLAND;
 						
 						SkyCraft.db().updateIsland(island);
 						SkyCraft.db().updatePlayer(sck);
@@ -220,7 +226,9 @@ public class SCOperations {
 	
 	public static void transferIsland(Player player, String player1, String player2){
 		
-		Island island = SkyCraft.db().getIsland(SCPlayerManager.getIslandID(player1));
+		SCPlayer p1 = SkyCraft.db().getPlayer(player1);
+		
+		Island island = p1.getIsland();
 		SCPlayer owner = SkyCraft.db().getPlayer(player1);
 		SCPlayer newowner = SkyCraft.db().getPlayer(player2);
 		if(newowner.hasIsland()){
@@ -229,8 +237,10 @@ public class SCOperations {
 		}else{
 			//Player2 does not have an island. Run the logic, transfer the island ownership.
 			
-			newowner.IslandID = island.id;
-			owner.IslandID = -1;
+			newowner.IY = island.ly;
+			newowner.IX = island.lx;
+			
+			owner.hasIsland = SCPlayer.NO_ISLAND;
 			
 			island.owner = newowner.name;
 		}
@@ -239,7 +249,7 @@ public class SCOperations {
 	
 	public static void deleteIsland(Player player, String target){
 		//Admin command to delete island
-		IslandFactory.deleteIsland(SkyCraft.db().getIsland(SkyCraft.db().getPlayer(target).IslandID));
+		IslandFactory.deleteIsland(SkyCraft.db().getPlayer(target).getIsland());
 		player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
 		
 	}

@@ -2,10 +2,13 @@ package org.mad3ngineer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
+
+import com.sk89q.worldedit.Vector;
 
 import lib.PatPeter.SQLibrary.Database;
 import lib.PatPeter.SQLibrary.MySQL;
@@ -28,21 +31,136 @@ public class DBInterface {
 			sql.open();
 		}
 		
-		dbQuery("CREATE TABLE IF NOT EXISTS sc_islands (id int PRIMARY KEY AUTO_INCREMENT, visitable BOOLEAN, home varchar(150), location varchar(50), owner varchar(50), members varchar(300), message varchar(300))");
+		dbQuery("CREATE TABLE IF NOT EXISTS sc_islands (visitable BOOLEAN, home varchar(150), location varchar(50), owner varchar(50), members varchar(300), message varchar(300))");
 
-		dbQuery("CREATE TABLE IF NOT EXISTS sc_players (name varchar(50) PRIMARY KEY, islandid int, islandrank varchar(50), invite varchar(50))");
+		dbQuery("CREATE TABLE IF NOT EXISTS sc_players (name varchar(50) PRIMARY KEY, islandrank varchar(50), invite varchar(50))");
 			
 	}
 	
-	
-	//Old code
-	
-	public String checkNull(String def, String test){
+	public Island getIsland(String location){
 		
-		if(test==null){
-			return def;
+		Island island = new Island();
+		
+		String[] l = location.split(";");
+		
+		island.lx = Integer.parseInt(l[0]);
+		island.ly = Integer.parseInt(l[1]);
+		
+		ResultSet res = dbQuery("SELECT * FROM sc_islands WHERE location='"+location+"'");
+		
+		String members = "";
+		String home = "";
+		
+		try{
+			if(res.next()){
+				island.owner = res.getString("owner");
+				island.message = res.getString("message");
+				island.visitable = (res.getInt("visitable")==1);
+				
+				members = res.getString("members");
+				home = res.getString("home");
+			}
+		}catch(Exception e){
+			
 		}
-		return test;
+		
+		ArrayList<String> m = new ArrayList<String>();
+		
+		String[] ma = members.split(";");
+		
+		for(int i=0;i<ma.length;i++){
+			m.add(ma[i]);
+		}
+
+		String[] h = home.split(";");
+		
+		island.x = Integer.parseInt(h[0]);
+		island.y = Integer.parseInt(h[1]);
+		island.z = Integer.parseInt(h[2]);
+		
+		
+		return island;
+		
+	}
+	
+	public Island updateIsland(Island island){
+		
+		ResultSet row = dbQuery("SELECT * FROM sc_islands WHERE location='"+island.lx+";"+island.ly+"'");
+		
+		int visit = 0;
+		
+		if(island.visitable)
+			visit = 1;
+		
+		String members = "";
+		
+		if(island.members.size()>=1){
+			members = island.members.get(0);
+		}
+		if(island.members.size()>1){
+			for(int i = 1; i < island.members.size(); i++){
+				members = members + ";" + island.members.get(i);
+			}
+		}
+		
+		try{
+			if(row.next()){
+				dbQuery("UPDATE sc_islands SET home='"+island.x+";"+island.y+";"+island.z+";', message='"+island.message+"', owner='"+island.owner+"', visitable='"+visit+"', members='"+members+"' WHERE location='"+island.lx+";"+island.ly+"';");
+			}else{
+				dbQuery("INSERT INTO sc_islands (home, location, message, owner, visitable) VALUES ('"+island.x+";"+island.y+";"+island.z+"','"+island.lx+";"+island.ly+"','"+island.message+"','"+island.owner+"','"+visit+"');");
+			}
+		}catch(Exception e){
+			
+		}
+		
+		return island;
+		
+	}
+	
+	public SCPlayer getPlayer(String name){
+		
+		SCPlayer player = new SCPlayer();
+		
+		ResultSet res = dbQuery("SELECT * FROM sc_players WHERE name='"+name+"'");
+		
+		player.name = name;
+		
+		try{
+			if(res.next()){
+				player.IslandRank = res.getInt("islandrank");
+				player.invited = res.getString("invited");
+			}else{
+				player.IslandRank = 0;
+				player.invited = "";
+			}
+		}catch(Exception e){
+			player.IslandRank = 0;
+			player.invited = "";
+		}
+		
+		return player;
+		
+	}
+	
+	public void updatePlayer(SCPlayer player){
+		
+		ResultSet res = dbQuery("SELECT * FROM sc_players WHERE name='"+player.name+"'");
+		
+		try{
+			if(res.next()){
+				dbQuery("UPDATE sc_players SET islandrank='"+player.IslandRank+"', invite='"+player.invited+"' WHERE name='"+player.name+"';");
+			}else{
+				dbQuery("INSERT INTO sc_players (islandrank, invite, name) VALUES ('"+player.IslandRank+"', '"+player.invited+"', '"+player.name+"')");
+			}
+		}catch(Exception e){
+			SkyCraft.getInstance().getLogger().severe(e.getMessage());
+		}
+		
+	}
+	
+	public void deleteIsland(Island island){
+		
+		dbQuery("DELETE FROM sc_islands WHERE location='"+island.lx+";"+island.ly+"'");
 		
 	}
 	
@@ -60,7 +178,6 @@ public class DBInterface {
 			result = sql.query(query);
 		} catch (SQLException e) {
 			SkyCraft.getInstance().getLogger().severe("Could not run query '"+query+"' on database "+SkyCraft.getInstance().getConfig().getString("db_database"));
-			SkyCraft.getInstance().getLogger().severe("\n----------StackTrace----------");
 			SkyCraft.getInstance().getLogger().severe(e.toString());
 			
 			SkyCraft.exit();
@@ -70,13 +187,21 @@ public class DBInterface {
 		
 	}
 	
-	public int getIslandID(String Location){
+	//Old code
+	
+	
+	/*public int getIslandID(String Location){
 		
 		int id = -1;
 		
-		ResultSet result = dbQuery("SELECT * FROM sc_islands WHERE location = '"+Location+"';");
+		ResultSet result = dbQuery("SELECT * FROM sc_islands WHERE location='"+Location+"';");
+		
 		try{
-			id = result.getInt("id");
+			if(result.next()){
+				id = result.getInt("id");
+			}else{
+				id = -1;
+			}
 		}catch(Exception e){
 			SkyCraft.getInstance().getLogger().severe("Could not use result from table sc_islands row where location = "+Location);
 			SkyCraft.getInstance().getLogger().severe(e.toString());
@@ -250,12 +375,6 @@ public class DBInterface {
 		
 		return id;
 		
-	}
-	
-	public void deleteIsland(Island island){
-		
-		ResultSet result = dbQuery("DELETE FROM sc_islands WHERE owner='"+island.owner+"'");
-		
-	}
+	}*/
 	
 }

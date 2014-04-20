@@ -5,9 +5,13 @@ public class SCPlayer {
 	public static int RANK_OWNER = 1;
 	public static int RANK_OFFICER = 2;
 	public static int RANK_MEMBER = 3;
+	public static int HAS_ISLAND = 1;
+	public static int NO_ISLAND = 0;
 	public String name;
 	public String invited;
-	public int IslandID;
+	public int hasIsland;
+	public int IX;
+	public int IY;
 	public int IslandRank;
 	
 	public Island getIsland(){
@@ -15,7 +19,7 @@ public class SCPlayer {
 		if(!this.hasIsland()){
 			return null;
 		}else{
-			return SkyCraft.db().getIsland(this.IslandID);
+			return SkyCraft.db().getIsland(this.IX+";"+this.IY);
 		}
 		
 	}
@@ -28,7 +32,7 @@ public class SCPlayer {
 	
 	public boolean hasIsland(){
 		
-		if(this.IslandID>=0){
+		if(this.hasIsland==SCPlayer.HAS_ISLAND){
 			return true;
 		}else{
 			return false;
@@ -38,7 +42,8 @@ public class SCPlayer {
 	
 	public void createIsland(){
 		
-		this.IslandID = IslandFactory.createNewIsland(this.name);
+		voxel v = new voxel();
+		v = IslandFactory.createNewIsland(this.name);
 		this.IslandRank = SCPlayer.RANK_OWNER;
 		
 	}

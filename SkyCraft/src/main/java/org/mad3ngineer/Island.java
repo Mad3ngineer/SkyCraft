@@ -8,7 +8,6 @@ public class Island {
 	
 	String owner;
 	String message;
-	int id;
 	double x;
 	double y;
 	double z;
@@ -16,6 +15,13 @@ public class Island {
 	int ly;
 	boolean visitable;
 	ArrayList<String> members;
+	
+	public Island(){
+		
+		owner = "";
+		members = new ArrayList<String>();
+		
+	}
 	
 	public void addMember(String name){
 		
@@ -44,8 +50,9 @@ public class Island {
 		
 		for(int i = 0; i < members.size(); i++){
 			SCPlayer p = SkyCraft.db().getPlayer(members.get(i));
-			if(p.IslandID == this.id){
-				p.IslandID = -1;
+			if((p.IX == this.lx)&&(p.IY == this.ly)){
+				p.IX = -1;
+				p.IY = -1;
 				SkyCraft.db().updatePlayer(p);
 			}
 		}
