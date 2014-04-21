@@ -10,3 +10,4 @@ worldname: skycraft
 
 #The size of islands in the world
 islandsize: 150
+islandheight: 150

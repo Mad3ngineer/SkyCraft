@@ -2,9 +2,13 @@ package org.mad3ngineer;
 
 import java.util.ArrayList;
 
+import org.bukkit.Location;
+
+import com.sk89q.worldedit.Vector;
+
 public class IslandFactory {
 	
-	public static voxel createNewIsland(String owner){
+	public static Island createNewIsland(String owner){
 		
 		Island island = new Island();
 		
@@ -16,11 +20,17 @@ public class IslandFactory {
 		island.lx = pos.x;
 		island.ly = pos.y;
 		
+		Vector center = island.getCenter();
+		
+		island.x = center.getX() - 2;
+		//island.y = center.getY() + 8;
+		island.z = center.getZ() - 2;
+		
 		SkyCraft.db().updateIsland(island);
 		
-		return new voxel(island.lx, island.ly);
+		WEInterface.pasteIsland(island.getCenter(), "normal.schematic");
 		
-		//TODO: Add worldedit island pasting
+		return island;
 		
 	}
 	
@@ -49,24 +59,28 @@ public class IslandFactory {
 			}
 			pos = open.get(dv);
 			
-			if(SkyCraft.db().getIsland(pos.x+";"+pos.y).owner.equals("")){
-				//Island id returned is -1, meaning that there is no island at that location. This is a good spot.
-				return pos;
-				
+			Island i = SkyCraft.db().getIsland(pos.x+";"+pos.y);
+			
+			if(i.owner!=null){
+				if(SkyCraft.db().getIsland(pos.x+";"+pos.y).owner.equals("")){
+					//Island id returned is -1, meaning that there is no island at that location. This is a good spot.
+					return pos;
+				}else{
+					//Island is not equal to -1, so it exists. Not a good place for a new island.
+					open.remove(pos);
+					closed.add(pos);
+					pos.x+=1;
+						open.add(pos);
+					pos.x-=2;
+						open.add(pos);
+					pos.x+=1;
+					pos.y+=1;
+					open.add(pos);
+					pos.y-=2;
+					open.add(pos);
+				}
 			}else{
-				//Island is not equal to -1, so it exists. Not a good place for a new island.
-				open.remove(pos);
-				closed.add(pos);
-				pos.x+=1;
-				open.add(pos);
-				pos.x-=2;
-				open.add(pos);
-				pos.x+=1;
-				pos.y+=1;
-				open.add(pos);
-				pos.y-=2;
-				open.add(pos);
-				
+				return pos;
 			}
 			
 		}while(true);
@@ -81,12 +95,6 @@ public class IslandFactory {
 		}else{
 			return -a;
 		}
-		
-	}
-
-	public static void deleteIsland(Island island) {
-		
-		
 		
 	}
 

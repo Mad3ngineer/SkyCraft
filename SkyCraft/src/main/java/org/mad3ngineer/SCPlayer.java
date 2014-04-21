@@ -43,7 +43,7 @@ public class SCPlayer {
 	public void createIsland(){
 		
 		voxel v = new voxel();
-		v = IslandFactory.createNewIsland(this.name);
+		IslandFactory.createNewIsland(this.name);
 		this.IslandRank = SCPlayer.RANK_OWNER;
 		
 	}

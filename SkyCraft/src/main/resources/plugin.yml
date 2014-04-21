@@ -6,7 +6,7 @@ version: ${project.version}
 commands:
    island:
       description: Island Operations.
-      usage: /island [home|sethome|accept|decline] {[invite|kick|visit|] <player>}
+      usage: /island [home|sethome|accept|decline|delete] {[invite|kick|visit|] <player>}
       permission: skycraft.island
       permission-message: You don't have <permission>
    islandev:

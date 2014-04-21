@@ -27,7 +27,7 @@ public class SCOperations {
 		
 		SCPlayer scplayer = SkyCraft.db().getPlayer(player.getName());
 		if(scplayer.hasIsland()){
-			if(scplayer.IslandRank>=SCPlayer.RANK_OFFICER){
+			if(scplayer.IslandRank<=SCPlayer.RANK_OFFICER){
 			
 				Island island = scplayer.getIsland();
 				voxel ixy = new voxel();
@@ -39,11 +39,11 @@ public class SCOperations {
 				xy.x = (int) loc.getX();
 				xy.y = (int) loc.getZ();
 			
-				if(IslandWorld.insideIsland(xy, ixy)){
+				if(island.insideIsland(xy)){
 					
 					island.x = loc.getX();
 					island.y = loc.getY();
-					island.z = loc.getY();
+					island.z = loc.getZ();
 			    	scplayer.updateIsland(island);
 			    	player.sendMessage(ChatColor.GREEN+"Island home set!");
 			    
@@ -87,12 +87,13 @@ public class SCOperations {
 		if(scplayer.hasIsland()){
 			player.sendMessage(ChatColor.RED+"You already have an island! Delete it if you want to create a new one.");
 		}else{
-			voxel v = IslandFactory.createNewIsland(player.getName());
-			scplayer.IX = v.x;
-			scplayer.IY = v.y;
+			Island i = IslandFactory.createNewIsland(player.getName());
+			scplayer.IX = i.lx;
+			scplayer.IY = i.ly;
 			scplayer.hasIsland = SCPlayer.HAS_ISLAND;
 			scplayer.IslandRank = SCPlayer.RANK_OWNER;
 			SkyCraft.db().updatePlayer(scplayer);
+			SkyCraft.getInstance().getLogger().info("Island coords for "+i.owner+" added: "+i.lx+", "+i.ly);
 			player.sendMessage(ChatColor.GREEN+"Island Created!");
 			player.teleport(scplayer.getIsland().getHome());
 		}
@@ -118,9 +119,10 @@ public class SCOperations {
 	public static void acceptInvite(Player player){
 		
 		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
+		SkyCraft.getInstance().getLogger().info(scp.invited+", "+scp.IslandRank);
 		SCPlayer sct = SkyCraft.db().getPlayer(scp.invited);
 		
-		if(sct.name.equals("")){
+		if(scp.invited.equals("")){
 			player.sendMessage(ChatColor.RED+"You have no invites!");
 			return;
 		}else{
@@ -129,18 +131,11 @@ public class SCOperations {
 			}else{
 				if(sct.hasIsland()){
 					Island island = sct.getIsland();
-					island.addMember(scp.name);
-					scp.hasIsland = SCPlayer.HAS_ISLAND;
-					scp.IX = island.lx;
-					scp.IY = island.ly;
-					
-					scp.invited = null;
-					scp.IslandRank = SCPlayer.RANK_MEMBER;
+					island.addMember(scp);
 			
 					player.sendMessage(ChatColor.GREEN+"You have been added to "+sct.name+"'s island!");
 			
 					SkyCraft.db().updateIsland(island);
-					SkyCraft.db().updatePlayer(scp);
 				}else{
 					player.sendMessage(ChatColor.RED+sct.name+" does not have an island!");
 					scp.invited = null;
@@ -174,7 +169,7 @@ public class SCOperations {
 		if(scp.hasIsland()){
 			if(sck.hasIsland()){
 				if(scp.IX==sck.IX&&scp.IY==sck.IY){
-					if(scp.IslandRank>sck.IslandRank&&scp.IslandRank>=SCPlayer.RANK_OFFICER){
+					if(scp.IslandRank<sck.IslandRank&&scp.IslandRank<=SCPlayer.RANK_OFFICER){
 						player.sendMessage(ChatColor.GREEN+sck.name+" has been kicked from your island.");
 						try{
 							SkyCraft.getInstance().getServer().getPlayer(sck.name).sendMessage(ChatColor.RED+"You have been kicked from your island :(");
@@ -182,7 +177,7 @@ public class SCOperations {
 							SkyCraft.getInstance().getLogger().info(ChatColor.RED+"An offline player, "+sck.name+", has been kicked from their island");
 						}
 						Island island = scp.getIsland();
-						island.removeMember(sck.name);
+						island.removeMember(sck);
 						sck.hasIsland = SCPlayer.NO_ISLAND;
 						
 						SkyCraft.db().updateIsland(island);
@@ -208,7 +203,9 @@ public class SCOperations {
 		
 		if(scp.hasIsland()){
 			if(scp.IslandRank == SCPlayer.RANK_OWNER){
-				IslandFactory.deleteIsland(scp.getIsland());
+				scp.getIsland().delete();
+				scp.hasIsland = SCPlayer.NO_ISLAND;
+				SkyCraft.db().updatePlayer(scp);
 			}
 		}
 		
@@ -249,7 +246,7 @@ public class SCOperations {
 	
 	public static void deleteIsland(Player player, String target){
 		//Admin command to delete island
-		IslandFactory.deleteIsland(SkyCraft.db().getPlayer(target).getIsland());
+		SkyCraft.db().getPlayer(target).getIsland().delete();
 		player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
 		
 	}

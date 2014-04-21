@@ -33,7 +33,7 @@ public class DBInterface {
 		
 		dbQuery("CREATE TABLE IF NOT EXISTS sc_islands (visitable BOOLEAN, home varchar(150), location varchar(50), owner varchar(50), members varchar(300), message varchar(300))");
 
-		dbQuery("CREATE TABLE IF NOT EXISTS sc_players (name varchar(50) PRIMARY KEY, islandrank varchar(50), invite varchar(50))");
+		dbQuery("CREATE TABLE IF NOT EXISTS sc_players (islandloc varchar(50), name varchar(50) PRIMARY KEY, islandrank varchar(50), invite varchar(50), hasisland int)");
 			
 	}
 	
@@ -49,20 +49,27 @@ public class DBInterface {
 		ResultSet res = dbQuery("SELECT * FROM sc_islands WHERE location='"+location+"'");
 		
 		String members = "";
-		String home = "";
+		String home = "0;0;0";
 		
 		try{
 			if(res.next()){
-				island.owner = res.getString("owner");
-				island.message = res.getString("message");
+				if(res.getString("owner")!=null)
+					island.owner = res.getString("owner");
+				if(res.getString("message")!=null)
+					island.message = res.getString("message");
+				
 				island.visitable = (res.getInt("visitable")==1);
 				
-				members = res.getString("members");
-				home = res.getString("home");
+				if(res.getString("members")!=null)
+					members = res.getString("members");
+				if(res.getString("home")!=null)
+					home = res.getString("home");
 			}
 		}catch(Exception e){
 			
 		}
+		
+		SkyCraft.getInstance().getLogger().info("splitting members: "+members);
 		
 		ArrayList<String> m = new ArrayList<String>();
 		
@@ -71,13 +78,24 @@ public class DBInterface {
 		for(int i=0;i<ma.length;i++){
 			m.add(ma[i]);
 		}
+		
+		SkyCraft.getInstance().getLogger().info("splitting home");
 
 		String[] h = home.split(";");
 		
-		island.x = Integer.parseInt(h[0]);
-		island.y = Integer.parseInt(h[1]);
-		island.z = Integer.parseInt(h[2]);
+		try{
+			island.x = Double.parseDouble(h[0]);
+			island.y = Double.parseDouble(h[1]);
+			island.z = Double.parseDouble(h[2]);
+		}catch(Exception e){
+			island.x = 1;
+			island.y = 1;
+			island.z = 1;
+		}
 		
+		SkyCraft.getInstance().getLogger().info("Home is "+island.x+", "+island.y+", "+island.z);
+		
+		SkyCraft.getInstance().getLogger().info("Island Fetched");
 		
 		return island;
 		
@@ -119,24 +137,37 @@ public class DBInterface {
 	
 	public SCPlayer getPlayer(String name){
 		
+		name = name.replace(" ", "");
+		
 		SCPlayer player = new SCPlayer();
 		
 		ResultSet res = dbQuery("SELECT * FROM sc_players WHERE name='"+name+"'");
 		
 		player.name = name;
 		
+		String loc = "0;0";
+		
 		try{
-			if(res.next()){
-				player.IslandRank = res.getInt("islandrank");
-				player.invited = res.getString("invited");
-			}else{
-				player.IslandRank = 0;
-				player.invited = "";
-			}
+			res.next();
+			if(res.getString("islandloc")!=null)
+				loc = res.getString("islandloc");
+				
+			player.hasIsland = res.getInt("hasisland");
+			player.IslandRank = res.getInt("islandrank");
+				
+			if(res.getString("invite")!=null)
+				player.invited = res.getString("invite");
 		}catch(Exception e){
+			SkyCraft.getInstance().getLogger().severe("Could not get all info for player "+name);
+			SkyCraft.getInstance().getLogger().severe(e.toString());
 			player.IslandRank = 0;
 			player.invited = "";
 		}
+		
+		String[] pos = loc.split(";");
+		
+		player.IX = Integer.parseInt(pos[0]);
+		player.IY = Integer.parseInt(pos[1]);
 		
 		return player;
 		
@@ -148,9 +179,9 @@ public class DBInterface {
 		
 		try{
 			if(res.next()){
-				dbQuery("UPDATE sc_players SET islandrank='"+player.IslandRank+"', invite='"+player.invited+"' WHERE name='"+player.name+"';");
+				dbQuery("UPDATE sc_players SET islandrank='"+player.IslandRank+"', invite='"+player.invited+"', islandloc='"+player.IX+";"+player.IY+"', hasisland='"+player.hasIsland+"' WHERE name='"+player.name+"';");
 			}else{
-				dbQuery("INSERT INTO sc_players (islandrank, invite, name) VALUES ('"+player.IslandRank+"', '"+player.invited+"', '"+player.name+"')");
+				dbQuery("INSERT INTO sc_players (islandrank, invite, name, islandloc, hasisland) VALUES ('"+player.IslandRank+"', '"+player.invited+"', '"+player.name+"', '"+player.IX+";"+player.IY+"', '"+player.hasIsland+"')");
 			}
 		}catch(Exception e){
 			SkyCraft.getInstance().getLogger().severe(e.getMessage());
