@@ -44,7 +44,7 @@ public class SCOperations {
 					island.x = loc.getX();
 					island.y = loc.getY();
 					island.z = loc.getZ();
-			    	scplayer.updateIsland(island);
+			    	island.save();
 			    	player.sendMessage(ChatColor.GREEN+"Island home set!");
 			    
 				}else{
@@ -68,9 +68,9 @@ public class SCOperations {
 		if(sctarget.hasIsland()){
 			if(sctarget.getIsland().visitable){
 				player.sendMessage(ChatColor.GREEN+"Tepeporting to "+target+"'s island");
-				player.sendMessage(ChatColor.GREEN+"Island Message:");
+				player.sendMessage(ChatColor.BLUE+"Island Message:");
 				player.sendMessage(ChatColor.GREEN+sctarget.getIsland().message);
-				player.teleport(sctarget.getIsland().getHome());
+				sctarget.sendHome(player);
 			}else{
 				player.sendMessage(ChatColor.BLUE+target+"'s island is closed to visitors");
 			}
@@ -87,15 +87,9 @@ public class SCOperations {
 		if(scplayer.hasIsland()){
 			player.sendMessage(ChatColor.RED+"You already have an island! Delete it if you want to create a new one.");
 		}else{
-			Island i = IslandFactory.createNewIsland(player.getName());
-			scplayer.IX = i.lx;
-			scplayer.IY = i.ly;
-			scplayer.hasIsland = SCPlayer.HAS_ISLAND;
-			scplayer.IslandRank = SCPlayer.RANK_OWNER;
-			SkyCraft.db().updatePlayer(scplayer);
-			SkyCraft.getInstance().getLogger().info("Island coords for "+i.owner+" added: "+i.lx+", "+i.ly);
+			scplayer.createIsland();
 			player.sendMessage(ChatColor.GREEN+"Island Created!");
-			player.teleport(scplayer.getIsland().getHome());
+			scplayer.sendHome(player);
 		}
 		
 	}
@@ -106,10 +100,8 @@ public class SCOperations {
 		SCPlayer sci = SkyCraft.db().getPlayer(invited);
 		
 		if(scp.hasIsland()){
-			sci.invited = scp.name;
+			sci.invite(scp.name);
 			player.sendMessage(ChatColor.BLUE+"You have invited "+sci.name+" to your island!");
-			SkyCraft.getInstance().getServer().getPlayer(invited).sendMessage(ChatColor.GREEN+"You have been invited to "+player.getName()+"'s island! Type /island accept to join!");
-			SkyCraft.db().updatePlayer(sci);
 		}else{
 			player.sendMessage(ChatColor.RED+"You can only invite players if you have an island!");
 		}
@@ -118,97 +110,25 @@ public class SCOperations {
 	
 	public static void acceptInvite(Player player){
 		
-		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
-		SkyCraft.getInstance().getLogger().info(scp.invited+", "+scp.IslandRank);
-		SCPlayer sct = SkyCraft.db().getPlayer(scp.invited);
+		SkyCraft.db().getPlayer(player.getName()).accept();
 		
-		if(scp.invited.equals("")){
-			player.sendMessage(ChatColor.RED+"You have no invites!");
-			return;
-		}else{
-			if(scp.hasIsland()){
-				player.sendMessage(ChatColor.RED+"You already have an island! Delete it before you accept invites!");
-			}else{
-				if(sct.hasIsland()){
-					Island island = sct.getIsland();
-					island.addMember(scp);
-			
-					player.sendMessage(ChatColor.GREEN+"You have been added to "+sct.name+"'s island!");
-			
-					SkyCraft.db().updateIsland(island);
-				}else{
-					player.sendMessage(ChatColor.RED+sct.name+" does not have an island!");
-					scp.invited = null;
-				}
-			}
-		}
 	}
 	
 	public static void declineInvite(Player player){
 		
-		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
-		if(SkyCraft.db().getPlayer(scp.invited).name==""){
-			return;
-		}
-		
-		player.sendMessage(ChatColor.GREEN+"You declined the invite from "+scp.invited);
-		try{
-			SkyCraft.getInstance().getServer().getPlayerExact(scp.invited).sendMessage(ChatColor.RED+scp.name+" declined your invite");
-		}catch(Exception e){
-			SkyCraft.getInstance().getLogger().info(ChatColor.RED+scp.name+" declined an offline player's invite");
-		}
-		scp.invited = null;
+		SkyCraft.db().getPlayer(player.getName()).decline();
 		
 	}
 	
 	public static void kickPlayer(Player player, String target){
 		
-		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
-		SCPlayer sck = SkyCraft.db().getPlayer(target);
-		
-		if(scp.hasIsland()){
-			if(sck.hasIsland()){
-				if(scp.IX==sck.IX&&scp.IY==sck.IY){
-					if(scp.IslandRank<sck.IslandRank&&scp.IslandRank<=SCPlayer.RANK_OFFICER){
-						player.sendMessage(ChatColor.GREEN+sck.name+" has been kicked from your island.");
-						try{
-							SkyCraft.getInstance().getServer().getPlayer(sck.name).sendMessage(ChatColor.RED+"You have been kicked from your island :(");
-						}catch(Exception e){
-							SkyCraft.getInstance().getLogger().info(ChatColor.RED+"An offline player, "+sck.name+", has been kicked from their island");
-						}
-						Island island = scp.getIsland();
-						island.removeMember(sck);
-						sck.hasIsland = SCPlayer.NO_ISLAND;
-						
-						SkyCraft.db().updateIsland(island);
-						SkyCraft.db().updatePlayer(sck);
-					}else{
-						player.sendMessage(ChatColor.RED+"You are not high enough rank to kick that player!");
-					}
-				}else{
-					player.sendMessage(ChatColor.RED+"That player is not in your island!");
-				}
-			}else{
-				player.sendMessage(ChatColor.RED+"That player is not in your island!");
-			}
-		}else{
-			player.sendMessage(ChatColor.RED+"You do not have an island!");
-		}
+		SkyCraft.db().getPlayer(player.getName()).kickPlayer(target);
 		
 	}
 	
 	public static void deleteIsland(Player player){
 		
-		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
-		
-		if(scp.hasIsland()){
-			if(scp.IslandRank == SCPlayer.RANK_OWNER){
-				scp.getIsland().delete();
-				scp.hasIsland = SCPlayer.NO_ISLAND;
-				SkyCraft.db().updatePlayer(scp);
-				player.sendMessage(ChatColor.GREEN+"Island deleted!");
-			}
-		}
+		SkyCraft.db().getPlayer(player.getName()).deleteIsland();
 		
 	}
 	
@@ -216,13 +136,13 @@ public class SCOperations {
 	
 	public static void tp(Player player, String target){
 		
-		SCPlayer sctarget = SkyCraft.db().getPlayer(target);
+		SCPlayer p = SkyCraft.db().getPlayer(target);
 		
-		if(sctarget.hasIsland()){
+		if(p.hasIsland()){
 			player.sendMessage(ChatColor.GREEN+"Teleporting to "+target+"'s island");
-			player.teleport(sctarget.getIsland().getHome());
+			SkyCraft.db().getPlayer(target).sendHome(player);
 		}else{
-			player.sendMessage(ChatColor.RED+target+" has no island!");
+			player.sendMessage(ChatColor.RED+"That person doesn't have an island");
 		}
 		
 	}
@@ -230,25 +150,19 @@ public class SCOperations {
 	public static void transferIsland(Player player, String player1, String player2){
 		
 		SCPlayer owner = SkyCraft.db().getPlayer(player1);
+		SCPlayer newowner = SkyCraft.db().getPlayer(player2);
+		Island island = owner.getIsland();
 		
 		if(owner.hasIsland()){
-			Island island = owner.getIsland();
-			SCPlayer newowner = SkyCraft.db().getPlayer(player2);
-			if(newowner.hasIsland()){
-				//Player2 already has an island. Do not transfer player1's island to them. Send a message to the person who ran this command
-				player.sendMessage(ChatColor.RED+newowner.name+" already has an island. Delete their island before transferring "+owner.name+"'s island to them.");
+			if(!newowner.hasIsland()){
+				player.sendMessage(ChatColor.GREEN+"Island transferred from "+player1+" to "+player2+".");
+				island.addMember(newowner);
+				island.setOwner(player2);
 			}else{
-				//Player2 does not have an island. Run the logic, transfer the island ownership.
-			
-				newowner.IY = island.ly;
-				newowner.IX = island.lx;
-			
-				owner.hasIsland = SCPlayer.NO_ISLAND;
-			
-				island.owner = newowner.name;
+				player.sendMessage(ChatColor.RED+player2+" already has an island");
 			}
 		}else{
-			player.sendMessage(ChatColor.RED+player1+" has no island!");
+			player.sendMessage(ChatColor.RED+player1+" has no island to transfer");
 		}
 			
 	}
@@ -258,7 +172,7 @@ public class SCOperations {
 		SCPlayer t = SkyCraft.db().getPlayer(target);
 		
 		if(t.hasIsland()){
-			t.getIsland().delete();
+			t.deleteIsland();
 			player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
 		}else{
 			player.sendMessage(ChatColor.RED+target+" has no island!");

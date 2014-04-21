@@ -1,5 +1,8 @@
 package org.mad3ngineer;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
 public class SCPlayer {
 
 	public static int RANK_OWNER = 1;
@@ -24,9 +27,45 @@ public class SCPlayer {
 		
 	}
 	
-	public void updateIsland(Island island){
+	public void kickPlayer(String name){
 		
-		SkyCraft.db().updateIsland(island);
+		if(this.IslandRank<=SCPlayer.RANK_OFFICER){
+			getIsland().removeMember(SkyCraft.db().getPlayer(name));
+		}else{
+			sendMessage(ChatColor.RED+"You are not a high enough rank to kick that person!");
+		}
+		
+	}
+	
+	public void save(){
+		
+		if(!name.equals(""));
+			SkyCraft.db().updatePlayer(this);
+		
+	}
+	
+	public void leaveIsland(){
+		
+		this.hasIsland = SCPlayer.NO_ISLAND;
+		SkyCraft.db().updatePlayer(this);
+		
+	}
+	
+	public void deleteIsland(){
+		
+		if(this.IslandRank==SCPlayer.RANK_OWNER){
+			this.getIsland().delete();
+		}else{
+			sendMessage(ChatColor.RED+"You can only delete your own island!");
+		}
+		
+	}
+	
+	public void sendHome(Player p){
+		
+		if(this.hasIsland()){
+			p.teleport(this.getIsland().getHome());
+		}
 		
 	}
 	
@@ -40,11 +79,63 @@ public class SCPlayer {
 		
 	}
 	
+	public void sendMessage(String message){
+		
+		try{
+			SkyCraft.getInstance().getServer().getPlayer(this.name).sendMessage(message);
+		}catch(Exception e){
+		}
+		
+	}
+	
+	public void invite(String name){
+		
+		this.invited = name;
+		sendMessage("You have been invited to join "+name+"'s island! Type /island <accept|deny> to respond to the invitation.");
+		save();
+		
+	}
+	
+	public void decline(){
+		
+		if(this.invited.equals("")){
+			sendMessage(ChatColor.RED+"You have no invitations");
+		}else{
+			sendMessage(ChatColor.DARK_RED+"You declined the invitation from "+this.invited);
+			this.invited = "";
+		}
+		
+	}
+	
+	public void accept(){
+		
+		if(!this.invited.equals("")){
+			if(this.hasIsland()){
+				sendMessage(ChatColor.RED+"You already have an island! Delete it to join someone");
+			}else{
+				SCPlayer joining = SkyCraft.db().getPlayer(this.invited);
+				if(joining.hasIsland()){
+					sendMessage(ChatColor.GREEN+"You joined "+this.invited+"'s island!");
+					SkyCraft.db().getPlayer(this.invited).getIsland().addMember(this);
+				}else{
+					sendMessage(ChatColor.RED+joining.name+" has no island!");
+				}
+			}
+		}else{
+			sendMessage(ChatColor.RED+"You have no invitations.");
+		}
+		
+		
+	}
+	
 	public void createIsland(){
 		
-		voxel v = new voxel();
-		IslandFactory.createNewIsland(this.name);
+		Island i = IslandFactory.createNewIsland(this.name);
 		this.IslandRank = SCPlayer.RANK_OWNER;
+		this.hasIsland = SCPlayer.HAS_ISLAND;
+		this.IX = i.lx;
+		this.IY = i.ly;
+		this.save();
 		
 	}
 	

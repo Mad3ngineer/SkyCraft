@@ -55,21 +55,6 @@ public class WGInterface {
 			region.setFlag(DefaultFlag.USE, State.DENY);
 			region.setFlag(DefaultFlag.BUILD, State.DENY);
 			ApplicableRegionSet set = WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).getApplicableRegions(SkyCraft.db().getPlayer(island.owner).getIsland().getHome());
-			 
-			if(set.size() > 0){
-				
-				for(Iterator iterator = set.iterator(); iterator.hasNext();){
-                 		
-					ProtectedRegion regions = (ProtectedRegion)iterator.next();
-                    
-					if(!regions.getId().equalsIgnoreCase("__global__")){
-						
-						WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).removeRegion(regions.getId());
-					}
-					
-                }
-
-            }
 			
 			if(WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).hasRegion(regionName(island))){
 				WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).removeRegion(regionName(island));
@@ -78,6 +63,7 @@ public class WGInterface {
 			WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).addRegion(region);
             SkyCraft.getInstance().getLogger().info("Created region for "+island.owner+"'s island");
             WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).save();
+            WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).load();
             
         } catch (Exception e) {
 			// TODO Auto-generated catch block

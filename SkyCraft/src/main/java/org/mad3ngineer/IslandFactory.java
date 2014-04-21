@@ -24,10 +24,11 @@ public class IslandFactory {
 		
 		island.x = center.getX() + -4;
 		island.z = center.getZ() + 5;
-		island.y = SkyCraft.getWorld().getHighestBlockYAt(new Location(SkyCraft.getWorld(), island.x, 0, island.z)) + 1;
+		island.y = center.getY() + 2;
 		
 		SkyCraft.db().updateIsland(island);
 		
+		WGInterface.protectIsland(island);
 		WEInterface.pasteIsland(island.getCenter(), "normal.schematic");
 		
 		return island;

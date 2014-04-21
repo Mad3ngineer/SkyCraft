@@ -19,7 +19,6 @@ permissions:
         children:
             skycraft.island.*: true
             skycraft.islandev.*: true
-
     skycraft.island.*:
         description: Gives access to all user commands
         children:
@@ -33,35 +32,34 @@ permissions:
             skycraft.island.kick: true
             skycraft.island.delete: true
             skycraft.island.create: true
-            
+            skycraft.island: true
     skycraft.island.home:
         description: Go to island
-        default: false
+        default: true
     skycraft.island.sethome:
         description: Set island home
-        default: false
+        default: true
     skycraft.island.visit:
         description: Visit someone's island
-        default: false
+        default: true
     skycraft.island.visitable:
         description: Toggle your islands visitability
-        default: false
+        default: true
     skycraft.island.accept:
         description: Accept invite to island
-        default: false
+        default: true
     skycraft.island.decline:
         description: Decline island invite
-        default: false
+        default: true
     skycraft.island.kick:
         description: Kick a player from your island
-        default: false
+        default: true
     skycraft.island.delete:
         description: Delete your island
-        default: false
+        default: true
     skycraft.island.create:
         description: Create a new island
-        default: false
-
+        default: true
     skycraft.islandev.*:
         description: Gives access to all admin commands
         default: op
@@ -69,7 +67,6 @@ permissions:
             skycraft.islandev.tp: true
             skycraft.islandev.transfer: true
             skycraft.islandev.delete: true
-
     skycraft.islandev.tp:
         description: Teleport to players islands
         default: op

@@ -2,6 +2,7 @@ package org.mad3ngineer;
 
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -26,32 +27,63 @@ public class Island {
 		
 	}
 	
+	public void setOwner(String owner){
+		
+		SCPlayer oldo = SkyCraft.db().getPlayer(this.owner);
+		SCPlayer newo = SkyCraft.db().getPlayer(owner);
+		
+		oldo.IslandRank = SCPlayer.RANK_MEMBER;
+		newo.IslandRank = SCPlayer.RANK_OWNER;
+		this.owner = owner;
+		
+		oldo.save();
+		newo.save();
+		this.save();
+		
+	}
+	
+	public void setHome(Location loc){
+		
+		this.x = loc.getX();
+		this.y = loc.getY();
+		this.z = loc.getZ();
+		save();
+		
+	}
+	
+	public void save(){
+		
+		SkyCraft.db().updateIsland(this);
+		
+	}
+	
 	public void addMember(SCPlayer scp){
 		
-		SkyCraft.getInstance().getLogger().info("Adding member");
 		members.add(scp.name);
-		SkyCraft.getInstance().getLogger().info("Member added");
 		WGInterface.addPlayer(this, scp.name);
 		
 		scp.hasIsland = SCPlayer.HAS_ISLAND;
 		scp.IX = this.lx;
 		scp.IY = this.ly;
-		SkyCraft.getInstance().getLogger().info("Player linked to island");
 		scp.invited = "";
 		scp.IslandRank = SCPlayer.RANK_MEMBER;
-		SkyCraft.db().updatePlayer(scp);
+		scp.save();
+		save();
 		
 	}
 	
 	public void removeMember(SCPlayer scp){
 		
+		scp.sendMessage(ChatColor.DARK_RED+"You have been kicked from your island!");
+		
 		members.remove(scp.name);
+			
 		WGInterface.removePlayer(this, scp.name);
 		
 		scp.hasIsland = SCPlayer.NO_ISLAND;
 		
-		SkyCraft.db().updatePlayer(scp);
-		SkyCraft.db().updateIsland(this);
+		scp.save();
+		save();
 		
 	}
 	
@@ -66,13 +98,10 @@ public class Island {
 		for(int i = 0; i < members.size(); i++){
 			SCPlayer p = SkyCraft.db().getPlayer(members.get(i));
 			if((p.IX == this.lx)&&(p.IY == this.ly)){
-				p.hasIsland = SCPlayer.NO_ISLAND;
-				SkyCraft.db().updatePlayer(p);
+				p.leaveIsland();
 			}
 		}
-		SCPlayer powner = SkyCraft.db().getPlayer(this.owner);
-		powner.hasIsland = SCPlayer.NO_ISLAND;
-		SkyCraft.db().updatePlayer(powner);
+		SkyCraft.db().getPlayer(this.owner).leaveIsland();;
 		
 		SkyCraft.db().deleteIsland(this);
 		SkyCraft.getInstance().getLogger().info("Island deleted from database");
