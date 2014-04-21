@@ -75,6 +75,9 @@ public class Island {
 		SkyCraft.db().updatePlayer(powner);
 		
 		SkyCraft.db().deleteIsland(this);
+		SkyCraft.getInstance().getLogger().info("Island deleted from database");
+		
+		WEInterface.clear(new Vector(getLowCorner().x, 0, getLowCorner().y), new Vector(this.getHighCorner().x, SkyCraft.getWorld().getMaxHeight(), this.getHighCorner().y));
 		
 	}
 	

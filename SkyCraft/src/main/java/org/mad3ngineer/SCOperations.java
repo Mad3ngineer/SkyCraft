@@ -107,7 +107,7 @@ public class SCOperations {
 		
 		if(scp.hasIsland()){
 			sci.invited = scp.name;
-			player.sendMessage(ChatColor.RED+"You have invited "+sci.name+" to your island!");
+			player.sendMessage(ChatColor.BLUE+"You have invited "+sci.name+" to your island!");
 			SkyCraft.getInstance().getServer().getPlayer(invited).sendMessage(ChatColor.GREEN+"You have been invited to "+player.getName()+"'s island! Type /island accept to join!");
 			SkyCraft.db().updatePlayer(sci);
 		}else{
@@ -206,6 +206,7 @@ public class SCOperations {
 				scp.getIsland().delete();
 				scp.hasIsland = SCPlayer.NO_ISLAND;
 				SkyCraft.db().updatePlayer(scp);
+				player.sendMessage(ChatColor.GREEN+"Island deleted!");
 			}
 		}
 		
@@ -216,38 +217,52 @@ public class SCOperations {
 	public static void tp(Player player, String target){
 		
 		SCPlayer sctarget = SkyCraft.db().getPlayer(target);
-		player.sendMessage(ChatColor.RED+"Teleporting to "+target+"'s island");
-		player.teleport(sctarget.getIsland().getHome());
+		
+		if(sctarget.hasIsland()){
+			player.sendMessage(ChatColor.GREEN+"Teleporting to "+target+"'s island");
+			player.teleport(sctarget.getIsland().getHome());
+		}else{
+			player.sendMessage(ChatColor.RED+target+" has no island!");
+		}
 		
 	}
 	
 	public static void transferIsland(Player player, String player1, String player2){
 		
-		SCPlayer p1 = SkyCraft.db().getPlayer(player1);
-		
-		Island island = p1.getIsland();
 		SCPlayer owner = SkyCraft.db().getPlayer(player1);
-		SCPlayer newowner = SkyCraft.db().getPlayer(player2);
-		if(newowner.hasIsland()){
-			//Player2 already has an island. Do not transfer player1's island to them. Send a message to the person who ran this command
-			player.sendMessage(ChatColor.RED+newowner.name+" already has an island. Delete their island before transferring "+owner.name+"'s island to them.");
+		
+		if(owner.hasIsland()){
+			Island island = owner.getIsland();
+			SCPlayer newowner = SkyCraft.db().getPlayer(player2);
+			if(newowner.hasIsland()){
+				//Player2 already has an island. Do not transfer player1's island to them. Send a message to the person who ran this command
+				player.sendMessage(ChatColor.RED+newowner.name+" already has an island. Delete their island before transferring "+owner.name+"'s island to them.");
+			}else{
+				//Player2 does not have an island. Run the logic, transfer the island ownership.
+			
+				newowner.IY = island.ly;
+				newowner.IX = island.lx;
+			
+				owner.hasIsland = SCPlayer.NO_ISLAND;
+			
+				island.owner = newowner.name;
+			}
 		}else{
-			//Player2 does not have an island. Run the logic, transfer the island ownership.
-			
-			newowner.IY = island.ly;
-			newowner.IX = island.lx;
-			
-			owner.hasIsland = SCPlayer.NO_ISLAND;
-			
-			island.owner = newowner.name;
+			player.sendMessage(ChatColor.RED+player1+" has no island!");
 		}
 			
 	}
 	
 	public static void deleteIsland(Player player, String target){
 		//Admin command to delete island
-		SkyCraft.db().getPlayer(target).getIsland().delete();
-		player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
+		SCPlayer t = SkyCraft.db().getPlayer(target);
+		
+		if(t.hasIsland()){
+			t.getIsland().delete();
+			player.sendMessage(ChatColor.GREEN+target+"'s island has been deleted!");
+		}else{
+			player.sendMessage(ChatColor.RED+target+" has no island!");
+		}
 		
 	}
 

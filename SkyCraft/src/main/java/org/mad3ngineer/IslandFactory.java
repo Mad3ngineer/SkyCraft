@@ -22,9 +22,9 @@ public class IslandFactory {
 		
 		Vector center = island.getCenter();
 		
-		island.x = center.getX() - 2;
-		//island.y = center.getY() + 8;
-		island.z = center.getZ() - 2;
+		island.x = center.getX() + -4;
+		island.z = center.getZ() + 5;
+		island.y = SkyCraft.getWorld().getHighestBlockYAt(new Location(SkyCraft.getWorld(), island.x, 0, island.z)) + 1;
 		
 		SkyCraft.db().updateIsland(island);
 		

@@ -75,6 +75,7 @@ public class IslandCommand implements CommandExecutor{
 	        	else if(args[0].equalsIgnoreCase("delete")){
 	        		if(player.hasPermission(userperm+"delete")){
 	        			SCOperations.deleteIsland(player);
+	        			player.sendMessage(ChatColor.GREEN+"Island deleted!");
 	        			return true;
 	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
@@ -135,7 +136,7 @@ public class IslandCommand implements CommandExecutor{
 	        	
 	        	if(args[0].equalsIgnoreCase("tp")){
 	        		if(player.hasPermission(devperm+"tp")){
-	        			SCOperations.tp(player, args[0]);
+	        			SCOperations.tp(player, args[1]);
 	        			return true;
 	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have permission!");

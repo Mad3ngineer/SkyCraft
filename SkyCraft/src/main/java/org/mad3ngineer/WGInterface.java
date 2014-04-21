@@ -25,7 +25,7 @@ public class WGInterface {
 		
 		global.setFlag(DefaultFlag.CHEST_ACCESS, State.DENY);
 		global.setFlag(DefaultFlag.BUILD, State.DENY);
-		global.setFlag(DefaultFlag.USE, val);
+		global.setFlag(DefaultFlag.USE, State.DENY);
 		
 	}
 	
