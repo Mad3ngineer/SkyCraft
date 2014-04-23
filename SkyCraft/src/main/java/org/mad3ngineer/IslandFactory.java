@@ -75,15 +75,19 @@ public class IslandFactory {
 					//Island is not equal to -1, so it exists. Not a good place for a new island.
 					open.remove(pos);
 					closed.add(pos);
-					pos.x+=1;
-					open.add(pos);
-					pos.x-=2;
-					open.add(pos);
-					pos.x+=1;
-					pos.y+=1;
-					open.add(pos);
-					pos.y-=2;
-					open.add(pos);
+					voxel x1 = new voxel(pos.x+1, pos.y);
+					voxel x2 = new voxel(pos.x-1, pos.y);
+					voxel y1 = new voxel(pos.x, pos.y+1);
+					voxel y2 = new voxel(pos.x, pos.y-1);
+					if(!closed.contains(x1))
+						open.add(x1);
+					if(!closed.contains(x2))
+						open.add(x2);
+					if(!closed.contains(y1))
+						open.add(y1);
+					if(!closed.contains(y2))
+						open.add(y2);
+					
 				}
 			}else{
 				return pos;
