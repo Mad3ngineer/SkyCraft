@@ -40,6 +40,8 @@ public class IslandFactory {
 		ArrayList<voxel> open = new ArrayList<voxel>();
 		ArrayList<voxel> closed = new ArrayList<voxel>();
 		
+		String island = null;
+		
 		voxel pos = new voxel();
 		pos.x = 0;
 		pos.y = 0;
@@ -50,22 +52,20 @@ public class IslandFactory {
 			
 			//Check for place closest to origin
 			int d = -1;
-			int dv = 0;
-			for(int i=0;i<open.size();i++){
-				int s = abs(open.get(i).x)+abs(open.get(i).y);
-				SkyCraft.getInstance().getLogger().info("Position "+open.get(i).x+", "+open.get(i).y+" distance "+s);
+			for(voxel test: open){
+				int s = abs(test.x)+abs(test.y);
+				SkyCraft.getInstance().getLogger().info("Position "+test.x+", "+test.y+" distance "+s+" best "+d);
 				if(d==-1){
 					d = s;
-					dv = i;
+					island = test.x+";"+test.y;
 				}
 				if(s<d){
-					dv = i;
 					d = s;
+					island = test.x+";"+test.y;
 				}
 			}
-			pos = open.get(dv);
 			
-			Island i = SkyCraft.db().getIsland(pos.x+";"+pos.y);
+			Island i = SkyCraft.db().getIsland(island);
 			
 			if(i.owner!=null){
 				if(SkyCraft.db().getIsland(pos.x+";"+pos.y).owner.equals("")){

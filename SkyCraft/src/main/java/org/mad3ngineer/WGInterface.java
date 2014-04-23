@@ -95,7 +95,7 @@ public class WGInterface {
 		
 		SkyCraft.getInstance().getLogger().info("Adding "+player+" to region for "+regionName(island));
 		protectIsland(island);
-		DefaultDomain members = WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).getRegion(regionName(island)).getOwners();
+		DefaultDomain members = WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).getRegion(regionName(island)).getMembers();
         members.addPlayer(player);
         WGBukkit.getPlugin().getRegionManager(SkyCraft.getWorld()).getRegion(regionName(island)).setOwners(members);
         SkyCraft.getInstance().getLogger().info("Player added to region!");
