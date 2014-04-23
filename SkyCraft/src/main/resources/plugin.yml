@@ -6,7 +6,7 @@ version: ${project.version}
 commands:
    island:
       description: Island Operations.
-      usage: /island [home|sethome|accept|decline|delete] {[invite|kick|visit|] <player>}
+      usage: /island [home|sethome|accept|decline|delete|setbiome] {[invite|kick|visit|] <player>}
       permission: skycraft.island
       permission-message: You don't have <permission>
    islandev:
@@ -32,34 +32,39 @@ permissions:
             skycraft.island.kick: true
             skycraft.island.delete: true
             skycraft.island.create: true
+            skycraft.island.biome: true
             skycraft.island: true
     skycraft.island.home:
         description: Go to island
-        default: true
+        default: false
     skycraft.island.sethome:
         description: Set island home
-        default: true
+        default: false
     skycraft.island.visit:
         description: Visit someone's island
-        default: true
+        default: false
     skycraft.island.visitable:
         description: Toggle your islands visitability
-        default: true
+        default: false
     skycraft.island.accept:
         description: Accept invite to island
-        default: true
+        default: false
     skycraft.island.decline:
         description: Decline island invite
-        default: true
+        default: false
     skycraft.island.kick:
         description: Kick a player from your island
-        default: true
+        default: false
     skycraft.island.delete:
         description: Delete your island
-        default: true
+        default: false
     skycraft.island.create:
         description: Create a new island
-        default: true
+        default: false
+    skycraft.island.biome:
+        description: Set island biome
+        default: false
+
     skycraft.islandev.*:
         description: Gives access to all admin commands
         default: op

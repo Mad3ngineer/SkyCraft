@@ -61,6 +61,13 @@ public class SCOperations {
 		
 	}
 	
+	public static void setBiome(Player player, String biome){
+		
+		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
+		scp.setBiome(biome);
+		
+	}
+	
 	public static void visit(Player player, String target){
 		
 		SCPlayer sctarget = SkyCraft.db().getPlayer(target);

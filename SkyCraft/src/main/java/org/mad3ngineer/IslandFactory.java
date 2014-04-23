@@ -29,7 +29,7 @@ public class IslandFactory {
 		SkyCraft.db().updateIsland(island);
 		
 		WGInterface.protectIsland(island);
-		WEInterface.pasteIsland(island.getCenter(), "normal.schematic");
+		WEInterface.pasteIsland(new Vector(island.getLowCorner().x, 0, island.getLowCorner().y), new Vector(island.getHighCorner().x, 0, island.getHighCorner().y), island.getCenter(), "normal.schematic");
 		
 		return island;
 		
@@ -53,7 +53,12 @@ public class IslandFactory {
 			int dv = 0;
 			for(int i=0;i<open.size();i++){
 				int s = abs(open.get(i).x)+abs(open.get(i).y);
-				if(s<d||d==-1){
+				SkyCraft.getInstance().getLogger().info("Position "+open.get(i).x+", "+open.get(i).y+" distance "+s);
+				if(d==-1){
+					d = s;
+					dv = i;
+				}
+				if(s<d){
 					dv = i;
 					d = s;
 				}
@@ -71,9 +76,9 @@ public class IslandFactory {
 					open.remove(pos);
 					closed.add(pos);
 					pos.x+=1;
-						open.add(pos);
+					open.add(pos);
 					pos.x-=2;
-						open.add(pos);
+					open.add(pos);
 					pos.x+=1;
 					pos.y+=1;
 					open.add(pos);

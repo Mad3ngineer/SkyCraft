@@ -47,6 +47,7 @@ public class SCPlayer {
 	public void leaveIsland(){
 		
 		this.hasIsland = SCPlayer.NO_ISLAND;
+		SkyCraft.getInstance().getServer().getWorld(SkyCraft.getInstance().getConfig().getString("spawnworld")).getSpawnLocation();
 		SkyCraft.db().updatePlayer(this);
 		
 	}
@@ -75,6 +76,16 @@ public class SCPlayer {
 			return true;
 		}else{
 			return false;
+		}
+		
+	}
+	
+	public void setBiome(String name){
+		
+		if(this.IslandRank<=SCPlayer.RANK_OFFICER){
+			this.getIsland().setBiome(name, this.name);
+		}else{
+			this.sendMessage(ChatColor.RED+"You are not a high enough rank to set your island's biome type!");
 		}
 		
 	}

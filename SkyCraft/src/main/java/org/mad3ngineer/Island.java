@@ -93,15 +93,23 @@ public class Island {
 		
 	}
 	
+	public void setBiome(String name, String playername){
+		
+		WEInterface.setBiome(new Vector(this.getLowCorner().x, 0, this.getLowCorner().y), new Vector(this.getHighCorner().x, 0, this.getHighCorner().y), name, playername);
+		
+	}
+	
 	public void delete(){
 		
 		for(int i = 0; i < members.size(); i++){
 			SCPlayer p = SkyCraft.db().getPlayer(members.get(i));
 			if((p.IX == this.lx)&&(p.IY == this.ly)){
 				p.leaveIsland();
+				SkyCraft.getInstance().getServer().getPlayer(p.name).teleport(SkyCraft.getInstance().getServer().getWorld(SkyCraft.getInstance().getConfig().getString("spawnworld")).getSpawnLocation());
 			}
 		}
-		SkyCraft.db().getPlayer(this.owner).leaveIsland();;
+		SkyCraft.db().getPlayer(this.owner).leaveIsland();
+		SkyCraft.getInstance().getServer().getPlayer(this.owner).teleport(SkyCraft.getInstance().getServer().getWorld(SkyCraft.getInstance().getConfig().getString("spawnworld")).getSpawnLocation());
 		
 		SkyCraft.db().deleteIsland(this);
 		SkyCraft.getInstance().getLogger().info("Island deleted from database");

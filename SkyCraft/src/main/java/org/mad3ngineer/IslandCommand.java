@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class IslandCommand implements CommandExecutor{
 	
-	String userperm = "skycraft.user.";
+	String userperm = "skycraft.island.";
 	String devperm = "skycraft.dev.";
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -28,17 +28,17 @@ public class IslandCommand implements CommandExecutor{
 	        if(cmd.getName().equalsIgnoreCase("island")){
 	        	
 	        	if(args[0].equalsIgnoreCase("sethome")){
-	        		//if(player.hasPermission(userperm+"sethome")){
+	        		if(player.hasPermission(userperm+"sethome")){
 	        			SCOperations.setHome(player);
 	        			return true;
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("visit")){
-	        		//if(player.hasPermission(userperm+"visit")){
+	        		if(player.hasPermission(userperm+"visit")){
 	        			if(args.length>=2){
 	        				SCOperations.visit(player, args[1]);
 	        				return true;
@@ -46,45 +46,60 @@ public class IslandCommand implements CommandExecutor{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island visit <player>");
 	        				return true;
         				}
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("home")){
-	        		//if(player.hasPermission(userperm+"home")){
+	        		if(player.hasPermission(userperm+"home")){
 	        		    SCOperations.home(player);
 	        		    return true;
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("create")){
-	        		//if(player.hasPermission(userperm+"create")){
+	        		if(player.hasPermission(userperm+"create")){
 	        			SCOperations.createIsland(player);
 	        			return true;
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("delete")){
-	        		//if(player.hasPermission(userperm+"delete")){
+	        		if(player.hasPermission(userperm+"delete")){
 	        			SCOperations.deleteIsland(player);
 	        			player.sendMessage(ChatColor.GREEN+"Island deleted!");
 	        			return true;
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
 	        			return true;
-	        		}*/
+	        		}
+	        	}
+	        	
+	        	else if(args[0].equalsIgnoreCase("setbiome")){
+	        		if(player.hasPermission(userperm+"biome")){
+	        			if(args.length>=2){
+	        				SCOperations.setBiome(player, args[1]);
+	        			}else{
+	        				player.sendMessage(ChatColor.RED+"Usage: /island setbiome");
+	        				player.sendMessage(ChatColor.AQUA+"Valid biomes are: "+ChatColor.YELLOW+"DESERT, "+ChatColor.GREEN+"FOREST, "+ChatColor.BLUE+"OCEAN, "+ChatColor.WHITE+"TAIGA, "+ChatColor.GREEN+"PLAINS, "+ChatColor.DARK_GREEN+"JUNGLE, "+ChatColor.GRAY+"MUSHROOM_ISLAND"); 
+	        			}
+	        			return true;
+	        		}else{
+	        			player.sendMessage(ChatColor.RED+"You do not have permission!");
+	        			return true;
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("kick")){
-	        		//if(player.hasPermission(userperm+"kick")){
+	        		if(player.hasPermission(userperm+"kick")){
 	        			if(args.length>=2){
 	        				SCOperations.kickPlayer(player, args[1]);
 	        				return true;
@@ -92,44 +107,44 @@ public class IslandCommand implements CommandExecutor{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island kick <player>");
 	        				return true;
         				}
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("invite")){
-	        		//if(player.hasPermission(userperm+"invite")){
+	        		if(player.hasPermission(userperm+"invite")){
 	        			if(args.length>=2){
 	        				SCOperations.invitePlayer(player, args[1]);
 	        				return true;
 	        			}else{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island invite <player");
 	        			}
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("accept")){
-	        		//if(player.hasPermission(userperm+"accept")){
+	        		if(player.hasPermission(userperm+"accept")){
 	        			SCOperations.acceptInvite(player);
 	        			return true;
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        	else if(args[0].equalsIgnoreCase("decline")){
-	        		//if(player.hasPermission(userperm+"decline")){
+	        		if(player.hasPermission(userperm+"decline")){
 	        			SCOperations.declineInvite(player);
 	        			return true;
-	        		/*}else{
+	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
 	        			return true;
-	        		}*/
+	        		}
 	        	}
 	        	
 	        }else if(cmd.getName().equalsIgnoreCase("islandev")){
