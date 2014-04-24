@@ -5,6 +5,10 @@ db_database: database_name
 db_username: username
 db_password: password
 
+#The plugin to use for protecting islands.
+#Supports "worldguard" and "griefprevention"
+claimsplugin: worldguard
+
 #The worldname that will be used for islands. 
 worldname: skycraft
 #The world where the plugin should send players
