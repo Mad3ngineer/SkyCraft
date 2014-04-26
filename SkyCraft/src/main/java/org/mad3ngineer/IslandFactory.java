@@ -28,7 +28,7 @@ public class IslandFactory {
 		
 		SkyCraft.db().updateIsland(island);
 		
-		WGInterface.protectIsland(island);
+		ClaimInterface.protectIsland(island);
 		WEInterface.pasteIsland(new Vector(island.getLowCorner().x, 0, island.getLowCorner().y), new Vector(island.getHighCorner().x, 0, island.getHighCorner().y), island.getCenter(), "normal.schematic");
 		
 		return island;

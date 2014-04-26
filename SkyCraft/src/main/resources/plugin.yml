@@ -12,7 +12,7 @@ commands:
       permission-message: You don't have <permission>
    islandev:
       description: Admin Island Operations.
-      usage: /islandev [tp|delete] <player> {transfer <owner> <newowner>}
+      usage: /islandev [tp|delete|protect] <player> {transfer <owner> <newowner>}
       
 permissions:
     skycraft.*:
@@ -73,6 +73,8 @@ permissions:
             skycraft.islandev.tp: true
             skycraft.islandev.transfer: true
             skycraft.islandev.delete: true
+            skycraft.islandev.generate: true
+            skycraft.islandev.protect: true
     skycraft.islandev.tp:
         description: Teleport to players islands
         default: op
@@ -81,4 +83,10 @@ permissions:
         default: op
     skycraft.islandev.delete:
         description: Force island deletion
+        default: op
+    skycraft.islandev.generate:
+        description: Generate an unowned island (For testing purposes)
+        default: op
+    skycraft.islandev.protect:
+        description: Protect an existing island (Useful for switching protection plugins)
         default: op

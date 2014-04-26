@@ -197,4 +197,15 @@ public class SCOperations {
 		
 	}
 
+	public static void protectIsland(Player player, String name) {
+		
+		SCPlayer scp = SkyCraft.db().getPlayer(name);
+		if(scp.hasIsland()){
+			scp.getIsland().protect();
+		}else{
+			player.sendMessage(ChatColor.RED+name+" has no island to protect!");
+		}
+		
+	}
+
 }

@@ -38,7 +38,7 @@ public class WEInterface {
 		
 		for(int x = min.getBlockX(); x < max.getBlockY(); x++){
 			for(int z = min.getBlockZ(); z < max.getBlockZ(); z++){
-				SkyCraft.getWorld().getBlockAt(x,0,z).setBiome(Biome.SKY);
+				SkyCraft.getWorld().getBlockAt(x,0,z).setBiome(Biome.PLAINS);
 			}
 		}
 		

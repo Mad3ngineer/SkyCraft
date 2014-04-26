@@ -4,16 +4,18 @@ public class ClaimInterface {
 
 	static String type;
 	
-	public void init(){
+	public static void init(){
 		
 		type = SkyCraft.getInstance().getConfig().getString("claimsplugin");
 		if(type.equalsIgnoreCase("worldguard")){
 			type = "worldguard";
+			WGInterface.init();
 		}
 		if(type.equalsIgnoreCase("griefprevention")){
 			type = "griefprevention";
 		}else{
 			type = "worldguard";
+			WGInterface.init();
 			SkyCraft.getInstance().getLogger().info("Config setting 'claimsplugin' was an invalid value. Defaulting to worldguard.");
 		}
 		

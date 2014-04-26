@@ -54,6 +54,10 @@ public class WGInterface {
         
         members.addPlayer(island.owner);
         
+        for(String player : island.members){
+			members.addPlayer(player);
+		}
+        
         region.setMembers(members);
         
         try {

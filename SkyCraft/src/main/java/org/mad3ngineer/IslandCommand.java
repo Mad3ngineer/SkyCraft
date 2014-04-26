@@ -90,6 +90,7 @@ public class IslandCommand implements CommandExecutor{
 	        			}else{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island setbiome");
 	        				player.sendMessage(ChatColor.AQUA+"Valid biomes are: "+ChatColor.YELLOW+"DESERT, "+ChatColor.GREEN+"FOREST, "+ChatColor.BLUE+"OCEAN, "+ChatColor.WHITE+"TAIGA, "+ChatColor.GREEN+"PLAINS, "+ChatColor.DARK_GREEN+"JUNGLE, "+ChatColor.GRAY+"MUSHROOM_ISLAND"); 
+	        				return true;
 	        			}
 	        			return true;
 	        		}else{
@@ -120,6 +121,7 @@ public class IslandCommand implements CommandExecutor{
 	        				return true;
 	        			}else{
 	        				player.sendMessage(ChatColor.RED+"Usage: /island invite <player");
+	        				return true;
 	        			}
 	        		}else{
 	        			player.sendMessage(ChatColor.RED+"You do not have Permission!");
@@ -190,8 +192,29 @@ public class IslandCommand implements CommandExecutor{
 	        			if(player.hasPermission(devperm+"generate")){
 	        				try{
 	        					SCOperations.generateBlank(Integer.parseInt(args[1]));
+	        					player.sendMessage(ChatColor.GREEN+args[1]+" islands generated!");
+	        					return true;
 	        				}catch(Exception e){
 	        					player.sendMessage(ChatColor.RED+"Invalid format! /islandev generate <number>");
+	        					return true;
+	        				}
+	        			}else{
+	        				player.sendMessage(ChatColor.RED+"You do not have permission!");
+	        				return true;
+	        			}
+	        		}else{//if loop failed, there werent enough arguments
+	        			return false;
+	        		}
+	        	}else if(args[0].equalsIgnoreCase("protect")){
+	        		if(2<=args.length){
+	        			if(player.hasPermission(devperm+"protect")){
+	        				try{
+	        					SCOperations.protectIsland(player, args[1]);
+	        					player.sendMessage(ChatColor.GREEN+"Island protected!");
+	        					return true;
+	        				}catch(Exception e){
+	        					player.sendMessage(ChatColor.RED+"Invalid format! /islandev protect <player>");
+	        					return true;
 	        				}
 	        			}else{
 	        				player.sendMessage(ChatColor.RED+"You do not have permission!");
@@ -207,7 +230,7 @@ public class IslandCommand implements CommandExecutor{
 	        
 	    } else {
 	    	
-	        sender.sendMessage("Cannot run this command from console");
+	        sender.sendMessage("Cannot run this command from console. Console commands will be implemented later.");
 	        return false;
 	        
 	    }

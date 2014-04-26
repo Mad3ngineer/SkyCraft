@@ -12,17 +12,21 @@ public class GPInterface {
 		
 		String[] trusted = {island.owner};
 		String[] sk = {"skycraft"};
-		GriefPrevention.instance.dataStore.addClaim(new Claim(new Location(SkyCraft.getWorld(), island.getLowCorner().x, 0, island.getLowCorner().y), new Location(SkyCraft.getWorld(), island.getHighCorner().x, SkyCraft.getWorld().getMaxHeight(), island.getHighCorner().y), "skycraft", trusted, trusted, trusted, sk , (long) ((((int) island.x) << 8) + island.y), false));
+		try{
+		GriefPrevention.instance.dataStore.deleteClaim(GriefPrevention.instance.dataStore.getClaimAt(new Location(SkyCraft.getWorld(), island.getCenter().getX(), island.getCenter().getY(), island.getCenter().getZ()), false));
+		}catch(Exception e){}
+		GriefPrevention.instance.dataStore.addClaim(new Claim(new Location(SkyCraft.getWorld(), island.getLowCorner().x, 0, island.getLowCorner().y), new Location(SkyCraft.getWorld(), island.getHighCorner().x, SkyCraft.getWorld().getMaxHeight(), island.getHighCorner().y), "skycraft", trusted, trusted, trusted, sk, (long) ((((int) island.x) << 8) + island.y), false));
+		addPlayer(island, island.owner);
+		for(String player : island.members){
+			addPlayer(island, player);
+		}
 		
 	}
 	
 	public static void addPlayer(Island island, String player){
 		
 		Claim claim = GriefPrevention.instance.dataStore.getClaimAt(new Location(SkyCraft.getWorld(), island.getCenter().getX(), island.getCenter().getY(), island.getCenter().getZ()), false);
-		claim.allowEdit(SkyCraft.getInstance().getServer().getPlayer(player));
 		claim.allowBuild(SkyCraft.getInstance().getServer().getPlayer(player));
-		claim.allowAccess(SkyCraft.getInstance().getServer().getPlayer(player));
-		claim.allowContainers(SkyCraft.getInstance().getServer().getPlayer(player));
 		GriefPrevention.instance.dataStore.saveClaim(claim);
 		
 	}
