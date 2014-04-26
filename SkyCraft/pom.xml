@@ -50,6 +50,14 @@
 			<artifactId>SQLibrary</artifactId>
 			<version>6.1</version>
 		</dependency>
+		
+    	<dependency>
+      		<groupId>me.ryanhamshire</groupId>
+      		<artifactId>GriefPrevention</artifactId>
+      		<version>7.8</version>
+      		<scope>system</scope>
+      		<systemPath>C:/users/Doc/git/SkyCraft/SkyCraft/libs/GriefPrevention.jar</systemPath>
+    	</dependency>
 	</dependencies>
 
 	<repositories>
