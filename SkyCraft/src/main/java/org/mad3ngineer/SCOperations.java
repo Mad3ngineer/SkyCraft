@@ -186,5 +186,15 @@ public class SCOperations {
 		}
 		
 	}
+	
+	public static void generateBlank(int num){
+		
+		for(int i = 1; i <= num; i++){
+			
+			IslandFactory.createNewIsland("ownedbyscience");
+			
+		}
+		
+	}
 
 }

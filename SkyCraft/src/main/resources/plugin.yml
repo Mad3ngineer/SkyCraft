@@ -1,6 +1,7 @@
 name: SkyCraft
 main: org.mad3ngineer.SkyCraft
-depend: [WorldEdit,CleanroomGenerator,WorldGuard,SQLibrary]
+depend: [WorldEdit,CleanroomGenerator,SQLibrary]
+softdepend: [WorldGuard,GriefPrevention]
 version: ${project.version}
 
 commands:

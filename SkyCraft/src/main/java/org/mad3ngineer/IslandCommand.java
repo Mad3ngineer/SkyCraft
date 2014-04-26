@@ -185,7 +185,23 @@ public class IslandCommand implements CommandExecutor{
 	        		}else{//if loop failed, there werent enough arguments
 	        			return false;
 	        		}
+	        	}else if(args[0].equalsIgnoreCase("generate")){
+	        		if(2<=args.length){
+	        			if(player.hasPermission(devperm+"generate")){
+	        				try{
+	        					SCOperations.generateBlank(Integer.parseInt(args[1]));
+	        				}catch(Exception e){
+	        					player.sendMessage(ChatColor.RED+"Invalid format! /islandev generate <number>");
+	        				}
+	        			}else{
+	        				player.sendMessage(ChatColor.RED+"You do not have permission!");
+	        				return true;
+	        			}
+	        		}else{//if loop failed, there werent enough arguments
+	        			return false;
+	        		}
 	        	}
+	        	
 	        	
 	        }
 	        

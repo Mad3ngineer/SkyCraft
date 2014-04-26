@@ -42,51 +42,66 @@ public class IslandFactory {
 		
 		String island = null;
 		
-		voxel pos = new voxel();
-		pos.x = 0;
-		pos.y = 0;
-		
-		open.add(pos);
+		open.add(new voxel(0,0));
 		
 		do{
 			
+			voxel pos = new voxel();
+			
 			//Check for place closest to origin
 			int d = -1;
+			
+			for(voxel test: closed){
+				SkyCraft.getInstance().getLogger().info("Closed: "+test.x+","+test.y);
+			}
+			
 			for(voxel test: open){
 				int s = abs(test.x)+abs(test.y);
 				SkyCraft.getInstance().getLogger().info("Position "+test.x+", "+test.y+" distance "+s+" best "+d);
 				if(d==-1){
 					d = s;
-					island = test.x+";"+test.y;
+					pos = test;
 				}
 				if(s<d){
 					d = s;
-					island = test.x+";"+test.y;
+					pos = test;
 				}
 			}
 			
-			Island i = SkyCraft.db().getIsland(island);
+			SkyCraft.getInstance().getLogger().info("Closest found; testing.");
+			
+			Island i = SkyCraft.db().getIsland(pos.x+";"+pos.y);
 			
 			if(i.owner!=null){
-				if(SkyCraft.db().getIsland(pos.x+";"+pos.y).owner.equals("")){
-					//Island id returned is -1, meaning that there is no island at that location. This is a good spot.
+				if(i.owner.equals("")){
 					return pos;
 				}else{
-					//Island is not equal to -1, so it exists. Not a good place for a new island.
-					open.remove(pos);
-					closed.add(pos);
 					voxel x1 = new voxel(pos.x+1, pos.y);
 					voxel x2 = new voxel(pos.x-1, pos.y);
 					voxel y1 = new voxel(pos.x, pos.y+1);
 					voxel y2 = new voxel(pos.x, pos.y-1);
-					if(!closed.contains(x1))
-						open.add(x1);
-					if(!closed.contains(x2))
-						open.add(x2);
-					if(!closed.contains(y1))
-						open.add(y1);
-					if(!closed.contains(y2))
-						open.add(y2);
+					if(!contains(closed, x1)){
+						if(!contains(open, x1)){
+							open.add(x1);
+						}
+					}
+					if(!contains(closed, x2)){
+						if(!contains(open, x2)){
+							open.add(x2);
+						}
+					}
+					if(!contains(closed, y1)){
+						if(!contains(open, y1)){
+							open.add(y1);
+						}
+					}
+					if(!contains(closed, y2)){
+						if(!contains(open, y2)){
+							open.add(y2);
+						}
+					}
+					open.remove(pos);
+					closed.add(pos);
 					
 				}
 			}else{
@@ -95,6 +110,20 @@ public class IslandFactory {
 			
 		}while(true);
 		
+		
+	}
+	
+	private static boolean contains(ArrayList<voxel> al, voxel v){
+		
+		for(voxel test: al){
+			SkyCraft.getInstance().getLogger().info("Testing voxel "+test.x+","+test.y+" vs "+v.x+","+v.y);
+			if(test.x==v.x&&test.y==v.y){
+				SkyCraft.getInstance().getLogger().info("They were equal.");
+				return true;
+			}
+		}
+		SkyCraft.getInstance().getLogger().info("Doesn't contain "+v.x+","+v.y);
+		return false;
 		
 	}
 	

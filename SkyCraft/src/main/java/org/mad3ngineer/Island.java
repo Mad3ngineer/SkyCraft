@@ -60,7 +60,7 @@ public class Island {
 	public void addMember(SCPlayer scp){
 		
 		members.add(scp.name);
-		WGInterface.addPlayer(this, scp.name);
+		ClaimInterface.addPlayer(this, scp.name);
 		
 		scp.hasIsland = SCPlayer.HAS_ISLAND;
 		scp.IX = this.lx;
@@ -78,7 +78,7 @@ public class Island {
 		
 		members.remove(scp.name);
 			
-		WGInterface.removePlayer(this, scp.name);
+		ClaimInterface.removePlayer(this, scp.name);
 		
 		scp.hasIsland = SCPlayer.NO_ISLAND;
 		
@@ -165,7 +165,7 @@ public class Island {
 	
 	public void protect(){
 		
-		WGInterface.protectIsland(this);
+		ClaimInterface.protectIsland(this);
 		
 	}
 	
