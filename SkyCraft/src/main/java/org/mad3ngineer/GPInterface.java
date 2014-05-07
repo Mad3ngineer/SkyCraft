@@ -12,7 +12,8 @@ public class GPInterface {
 	public static void protectIsland(Island island){
 		
 		String[] sk = {"skycraft"};
-		String[] blank = {""};
+		String[] trusted = {island.owner};
+		String[] blank = {};
 		
 		try{
 		GriefPrevention.instance.dataStore.deleteClaim(GriefPrevention.instance.dataStore.getClaimAt(new Location(SkyCraft.getWorld(), island.getCenter().getX(), island.getCenter().getY(), island.getCenter().getZ()), false));
@@ -20,9 +21,14 @@ public class GPInterface {
 			SkyCraft.getInstance().getLogger().info("No claim existed");
 		}
 		
-		Claim claim = new Claim(new Location(SkyCraft.getWorld(), island.getLowCorner().x, 0, island.getLowCorner().y), new Location(SkyCraft.getWorld(), island.getHighCorner().x, SkyCraft.getWorld().getMaxHeight(), island.getHighCorner().y), "skycraft", blank, blank, blank, sk, (long) ((((int) island.x) << 8) + island.y), true);
-		GriefPrevention.instance.dataStore.addClaim(claim);
-		GriefPrevention.instance.dataStore.saveClaim(claim);
+		SkyCraft.getInstance().getLogger().info(island.getLowCorner().x+", 0, "+island.getLowCorner().y+" <-> "+island.getHighCorner().x+", "+SkyCraft.getWorld().getMaxHeight()+", "+island.getHighCorner().y);
+		
+		GriefPrevention.instance.dataStore.addClaim(new Claim(new Location(SkyCraft.getWorld(), island.getLowCorner().x, 0, island.getLowCorner().y), new Location(SkyCraft.getWorld(), island.getHighCorner().x, SkyCraft.getWorld().getMaxHeight(), island.getHighCorner().y), "skycraft", trusted, trusted, trusted, sk , (long) ((((int) island.x) << 8) + island.y), false));
+		
+		//Claim claim = new Claim(new Location(SkyCraft.getWorld(), island.getLowCorner().x, 0, island.getLowCorner().y), new Location(SkyCraft.getWorld(), island.getHighCorner().x, SkyCraft.getWorld().getMaxHeight(), island.getHighCorner().y), "skycraft", trusted, blank, blank, sk, (long) ((((int) island.x) << 8) + island.y), true);
+		//GriefPrevention.instance.dataStore.addClaim(claim);
+		
+		//GriefPrevention.instance.dataStore.saveClaim(claim);
 		
 		addPlayer(island, island.owner);
 		
@@ -47,7 +53,7 @@ public class GPInterface {
 		SkyCraft.getInstance().getLogger().info(p.toString());
 		SkyCraft.getInstance().getLogger().info(String.valueOf(p.hasPermission("test")));
 		
-		claim.allowBuild(p);
+		SkyCraft.getInstance().getLogger().info(claim.allowBuild(p));
 		
 		GriefPrevention.instance.dataStore.saveClaim(claim);
 		
