@@ -13,10 +13,13 @@ public class ClaimInterface {
 		}
 		if(type.equalsIgnoreCase("griefprevention")){
 			type = "griefprevention";
+		}
+		if(type.equalsIgnoreCase("builtin")){
+			type = "builtin";
+			PInterface.init();
 		}else{
-			type = "worldguard";
-			WGInterface.init();
-			SkyCraft.getInstance().getLogger().info("Config setting 'claimsplugin' was an invalid value. Defaulting to worldguard.");
+			type = "builtin";
+			SkyCraft.getInstance().getLogger().info("Config setting 'claimsplugin' was an invalid value. Defaulting to builtin protection.");
 		}
 		
 	}
