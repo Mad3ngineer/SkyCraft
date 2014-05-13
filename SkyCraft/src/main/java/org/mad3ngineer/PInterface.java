@@ -84,7 +84,6 @@ public class PInterface implements Listener{
 				}
 				
 			}
-			player.sendMessage(ChatColor.DARK_AQUA+"I'm watching you...");
 			
 		}
 		
@@ -133,11 +132,14 @@ public class PInterface implements Listener{
 			
 			Player player = event.getPlayer();
 			Block block = event.getRightClicked().getLocation().getBlock();
+			player.sendMessage("Hit "+event.getRightClicked().getType().getName()+" at "+block.getX()+", "+block.getZ());
 			
 			for(SCPlayer p : players){
 				
 				if(p.name.equals(player.getName())){
+					player.sendMessage("You monster");
 					if(!inside(block, p)){
+						player.sendMessage("You evil person");
 						if(!player.hasPermission("skycraft.islandev.edit")){
 							event.setCancelled(true);
 							player.sendMessage(protect());

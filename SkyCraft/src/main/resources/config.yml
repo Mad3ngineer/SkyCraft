@@ -21,3 +21,6 @@ islandheight: 150
 
 #The protection message
 protected: You can't do this on other people's islands!
+
+#Debug mode (leave it off, this is for the developer)
+debug: false

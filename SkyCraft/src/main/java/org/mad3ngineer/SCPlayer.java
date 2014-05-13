@@ -31,6 +31,7 @@ public class SCPlayer {
 		
 		if(this.IslandRank<=SCPlayer.RANK_OFFICER){
 			getIsland().removeMember(SkyCraft.db().getPlayer(name));
+			sendMessage(ChatColor.DARK_AQUA+"Player kicked from your island");
 		}else{
 			sendMessage(ChatColor.RED+"You are not a high enough rank to kick that person!");
 		}

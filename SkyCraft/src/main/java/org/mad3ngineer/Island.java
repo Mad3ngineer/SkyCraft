@@ -29,8 +29,6 @@ public class Island {
 	
 	public void setOwner(String owner){
 		
-		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(owner, this, "owner"));
-		
 		SCPlayer oldo = SkyCraft.db().getPlayer(this.owner);
 		SCPlayer newo = SkyCraft.db().getPlayer(owner);
 		
@@ -41,6 +39,8 @@ public class Island {
 		oldo.save();
 		newo.save();
 		this.save();
+		
+		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(owner, this, "owner"));
 		
 	}
 	
@@ -61,8 +61,6 @@ public class Island {
 	
 	public void addMember(SCPlayer scp){
 		
-		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(scp.name, this, "join"));
-		
 		members.add(scp.name);
 		ClaimInterface.addPlayer(this, scp.name);
 		
@@ -74,11 +72,11 @@ public class Island {
 		scp.save();
 		save();
 		
+		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(scp.name, this, "join"));
+		
 	}
 	
 	public void removeMember(SCPlayer scp){
-		
-		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(scp.name, this, "kick"));
 		
 		scp.sendMessage(ChatColor.DARK_RED+"You have been kicked from your island!");
 		
@@ -90,6 +88,8 @@ public class Island {
 		
 		scp.save();
 		save();
+		
+		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(scp.name, this, "kick"));
 		
 	}
 	
