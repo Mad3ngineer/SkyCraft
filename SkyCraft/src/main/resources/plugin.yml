@@ -75,6 +75,7 @@ permissions:
             skycraft.islandev.delete: true
             skycraft.islandev.generate: true
             skycraft.islandev.protect: true
+            skycraft.islandev.edit: true
     skycraft.islandev.tp:
         description: Teleport to players islands
         default: op
@@ -89,4 +90,7 @@ permissions:
         default: op
     skycraft.islandev.protect:
         description: Protect an existing island (Useful for switching protection plugins)
+        default: op
+    skycraft.islandev.edit:
+        description: Always edit, even on other's islands.
         default: op

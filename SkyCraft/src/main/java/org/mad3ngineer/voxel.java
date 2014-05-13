@@ -1,5 +1,7 @@
 package org.mad3ngineer;
 
+import org.bukkit.Location;
+
 public class voxel{
 	
 	int x;
@@ -11,6 +13,12 @@ public class voxel{
 	}
 	
 	public voxel(){
+		
+	}
+	
+	public Location toLocation(){
+		
+		return new Location(SkyCraft.getWorld(), this.x, 0, this.y);
 		
 	}
 	

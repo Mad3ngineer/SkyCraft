@@ -18,9 +18,9 @@ public final class SkyCraft extends JavaPlugin {
 		
 		this.saveDefaultConfig();
 		
-		ClaimInterface.init();
 		db = new DBInterface();
 		db.init(this);
+		ClaimInterface.init();
         getCommand("island").setExecutor(new IslandCommand());
         getCommand("islandev").setExecutor(new IslandCommand());
 		

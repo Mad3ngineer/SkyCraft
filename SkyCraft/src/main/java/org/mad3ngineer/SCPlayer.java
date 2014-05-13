@@ -150,4 +150,24 @@ public class SCPlayer {
 		
 	}
 	
+	public voxel getLowCorner(){
+		
+		voxel corner = new voxel();
+		corner.x = (IX * SkyCraft.getInstance().getConfig().getInt("islandsize"))-(SkyCraft.getInstance().getConfig().getInt("islandsize")/2);
+		corner.y = (IY * SkyCraft.getInstance().getConfig().getInt("islandsize"))-(SkyCraft.getInstance().getConfig().getInt("islandsize")/2);
+		
+		return corner;
+		
+	}
+	
+	public voxel getHighCorner(){
+		
+		voxel corner = new voxel();
+		corner.x = (IX * SkyCraft.getInstance().getConfig().getInt("islandsize"))+(SkyCraft.getInstance().getConfig().getInt("islandsize")/2);
+		corner.y = (IY * SkyCraft.getInstance().getConfig().getInt("islandsize"))+(SkyCraft.getInstance().getConfig().getInt("islandsize")/2);
+		
+		return corner;
+		
+	}
+	
 }

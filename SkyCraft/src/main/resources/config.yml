@@ -6,8 +6,9 @@ db_username: username
 db_password: password
 
 #The plugin to use for protecting islands.
-#Supports "worldguard" and "griefprevention"
-claimsplugin: worldguard
+#Griefprevention is currently not working
+#Supports "worldguard", "griefprevention", and "builtin"
+claimsplugin: builtin
 
 #The worldname that will be used for islands. 
 worldname: skycraft
@@ -17,3 +18,6 @@ spawnworld: world
 #The size of islands in the world
 islandsize: 150
 islandheight: 150
+
+#The protection message
+protected: You can't do this on other people's islands!
