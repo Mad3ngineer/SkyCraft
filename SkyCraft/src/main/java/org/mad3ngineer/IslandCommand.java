@@ -37,6 +37,13 @@ public class IslandCommand implements CommandExecutor{
 	        		}
 	        	}
 	        	
+	        	else if(args[0].equalsIgnoreCase("visitable")){
+	        		if(player.hasPermission(userperm+"visitable")){
+	        			SCOperations.visitable(player);
+	        			return true;
+	        		}
+	        	}
+	        	
 	        	else if(args[0].equalsIgnoreCase("visit")){
 	        		if(player.hasPermission(userperm+"visit")){
 	        			if(args.length>=2){

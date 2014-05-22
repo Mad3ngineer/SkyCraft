@@ -29,6 +29,7 @@ public class IslandFactory {
 		SkyCraft.db().updateIsland(island);
 		
 		ClaimInterface.protectIsland(island);
+		SkyCraft.getInstance().getServer().getPluginManager().callEvent(new IslandEvent(island.owner, island, "join"));
 		WEInterface.pasteIsland(new Vector(island.getLowCorner().x, 0, island.getLowCorner().y), new Vector(island.getHighCorner().x, 0, island.getHighCorner().y), island.getCenter(), "normal.schematic");
 		
 		return island;

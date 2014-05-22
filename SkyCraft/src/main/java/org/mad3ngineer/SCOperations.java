@@ -75,8 +75,8 @@ public class SCOperations {
 		if(sctarget.hasIsland()){
 			if(sctarget.getIsland().visitable){
 				player.sendMessage(ChatColor.GREEN+"Tepeporting to "+target+"'s island");
-				player.sendMessage(ChatColor.BLUE+"Island Message:");
-				player.sendMessage(ChatColor.GREEN+sctarget.getIsland().message);
+				//player.sendMessage(ChatColor.BLUE+"Island Message:");
+				//player.sendMessage(ChatColor.GREEN+sctarget.getIsland().message);
 				sctarget.sendHome(player);
 			}else{
 				player.sendMessage(ChatColor.BLUE+target+"'s island is closed to visitors");
@@ -204,6 +204,17 @@ public class SCOperations {
 			scp.getIsland().protect();
 		}else{
 			player.sendMessage(ChatColor.RED+name+" has no island to protect!");
+		}
+		
+	}
+
+	public static void visitable(Player player) {
+		
+		SCPlayer scp = SkyCraft.db().getPlayer(player.getName());
+		if(scp.hasIsland()){
+			scp.getIsland().toggleVisitable(scp);
+		}else{
+			player.sendMessage(ChatColor.RED+"You do not have an island!");
 		}
 		
 	}

@@ -185,4 +185,18 @@ public class Island {
 		
 	}
 
+	public void toggleVisitable(SCPlayer scp) {
+		
+		if(visitable==true){
+			visitable=false;
+			scp.sendMessage(ChatColor.DARK_PURPLE+"Other players can no longer visit your island");
+		}else{
+			visitable=true;
+			scp.sendMessage(ChatColor.GREEN+"Your island is now visitable to other players!");
+		}
+		
+		this.save();
+		
+	}
+
 }
